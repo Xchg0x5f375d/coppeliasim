@@ -113,27 +113,9 @@ def main():
     wheel_movement_controller = WheelMovementController(
         robot.vrep_connection, robot.wheel_joints
     )
-    
     pattern_movement_controller = PatternMovementController(wheel_movement_controller)
-    # test_movement_patterns(pattern_movement_controller)
-    # test_different_velocities(pattern_movement_controller)
-    print("\nExecuting Spiral Pattern - Constant Speed:")
-    pattern_movement_controller.execute_spiral_pattern(
-        start_radius=0.5,
-        end_radius=2.0,
-        speed=0.5,
-        num_revolutions=3,
-        dynamics=MovementDynamics.CONSTANT,
-    )
-    robot.vrep_connection.set_object_position("youBot", (-4.700, 0.200, 0.0957))
-    print("\nExecuting Spiral Pattern - With Acceleration/Deceleration:")
-    pattern_movement_controller.execute_spiral_pattern(
-        start_radius=0.5,
-        end_radius=2.0,
-        speed=0.5,
-        num_revolutions=3,
-        dynamics=MovementDynamics.ACCEL_DECEL,
-    )
+    test_movement_patterns(pattern_movement_controller)
+    test_different_velocities(pattern_movement_controller)
     test_complex_trajectories(pattern_movement_controller)
 
 

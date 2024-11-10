@@ -59,9 +59,24 @@ class PatternMovementController:
         speed: float,
         dynamics: MovementDynamics = MovementDynamics.CONSTANT,
     ) -> None:
-        print("\nExecuting rectangular movement pattern...")
+        params = {
+            "Length": length,
+            "Width": width,
+            "Speed": speed,
+            "Dynamics": dynamics.value,
+        }
+        self.__print_parameters("rectangular", params)
         self.wheel_movement_controller.set_wheel_velocities(0)
         sides = [length, width, length, width]
+        perimeter = 2 * (length + width)
+        total_time = perimeter / speed
+        calculated_values = {
+            "Perimeter": perimeter,
+            "Estimated completion time": total_time,
+            "Number of turns": len(sides),
+            "Turn angle": 90.0,
+        }
+        self.__print_calculated_values(calculated_values)
         for i, side_length in enumerate(sides):
             print(f"\nMoving along side {i+1} of rectangle ({side_length} meters)")
             self.wheel_movement_controller.move_forward(side_length, speed, dynamics)
@@ -177,7 +192,15 @@ class PatternMovementController:
         self.__print_parameters("figure-eight", params)
         circumference = 2 * math.pi * radius
         time_per_circle = circumference / speed
-        time_to_complete = time_per_circle * 2  # Two circles
+        time_to_complete = time_per_circle * 2
+        calculated_values = {
+            "Circle circumference": circumference,
+            "Total distance": circumference * 2,
+            "Time per circle": time_per_circle,
+            "Estimated completion time": time_to_complete,
+            "Angular velocity": speed / radius,
+        }
+        self.__print_calculated_values(calculated_values)
 
         def calculate_velocities(progress: float, speed_multiplier: float) -> None:
             in_first_circle = progress < 0.5
@@ -277,6 +300,16 @@ class PatternMovementController:
         }
         self.__print_parameters("star", params)
         angle_between_points = 360 / points
+        total_distance = 2 * radius * points
+        estimated_time = total_distance / speed
+        calculated_values = {
+            "Angle between points": angle_between_points,
+            "Total distance": total_distance,
+            "Distance per point": 2 * radius,
+            "Estimated completion time": estimated_time,
+            "Total rotation": 360.0,
+        }
+        self.__print_calculated_values(calculated_values)
         for point in range(points):
             print(f"\nDrawing point {point + 1} of {points}:")
             print(f"- Moving outward {radius} meters...")
@@ -296,6 +329,7 @@ class PatternMovementController:
         width: float,
         num_zigzags: int,
         speed: float,
+        degree: float = 90.0,
         dynamics: MovementDynamics = MovementDynamics.CONSTANT,
     ) -> None:
         params = {
@@ -313,6 +347,9 @@ class PatternMovementController:
             "Segment length": segment_length,
             "Total distance": total_distance,
             "Estimated completion time": estimated_time,
+            "Number of turns": 2 * (num_zigzags - 1),
+            "Turn angle": degree,
+            "Total width covered": width * (num_zigzags - 1),
         }
         self.__print_calculated_values(calculated_values)
         self.wheel_movement_controller.set_wheel_velocities(0)
@@ -322,19 +359,19 @@ class PatternMovementController:
             self.wheel_movement_controller.move_forward(segment_length, speed, dynamics)
             if i < num_zigzags - 1:
                 if i % 2 == 0:
-                    print("- Turning right 90 degrees...")
-                    self.wheel_movement_controller.turn_right(90, speed)
+                    print(f"- Turning right {degree} degrees...")
+                    self.wheel_movement_controller.turn_right(degree, speed)
                     print(f"- Moving across {width:.2f} meters...")
                     self.wheel_movement_controller.move_forward(width, speed, dynamics)
-                    print("- Turning left 90 degrees...")
-                    self.wheel_movement_controller.turn_right(-90, speed)
+                    print(f"- Turning left {degree} degrees...")
+                    self.wheel_movement_controller.turn_right(-degree, speed)
                 else:
-                    print("- Turning left 90 degrees...")
-                    self.wheel_movement_controller.turn_right(-90, speed)
+                    print(f"- Turning left {degree} degrees...")
+                    self.wheel_movement_controller.turn_right(-degree, speed)
                     print(f"- Moving across {width:.2f} meters...")
                     self.wheel_movement_controller.move_forward(width, speed, dynamics)
-                    print("- Turning right 90 degrees...")
-                    self.wheel_movement_controller.turn_right(90, speed)
+                    print(f"- Turning right {degree} degrees...")
+                    self.wheel_movement_controller.turn_right(degree, speed)
         print("\nZigzag pattern completed!")
         print(
             f"Completed {num_zigzags} zigzags over {length:.2f} meters with {width:.2f} meter width"
