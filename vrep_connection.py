@@ -1,0 +1,102 @@
+from typing import Optional, Tuple
+
+import vrep
+
+
+class VREPConnection:
+    def __init__(self, address: str = "127.0.0.1", port: int = 19997) -> None:
+        self.__address = address
+        self.__port = port
+        self.__client_id: Optional[int] = None
+        self.connect()
+        self.start_simulation()
+
+    def connect(self) -> bool:
+        print("Program started")
+        vrep.simxFinish(-1)
+        self.__client_id = vrep.simxStart(
+            connectionAddress=self.__address,
+            connectionPort=self.__port,
+            waitUntilConnected=True,
+            doNotReconnectOnceDisconnected=True,
+            timeOutInMs=2000,
+            commThreadCycleInMs=5,
+        )
+        if self.__client_id == -1:
+            print("Failed connecting to remote API server")
+            return False
+        print("Connected to remote API server")
+        return True
+
+    def disconnect(self) -> bool:
+        if self.__client_id is None:
+            return False
+        self.stop_simulation()
+        vrep.simxFinish(self.__client_id)
+        print("Program ended")
+        return True
+
+    def start_simulation(self) -> bool:
+        if self.__client_id is None:
+            return False
+        status = vrep.simxStartSimulation(self.__client_id, vrep.simx_opmode_blocking)
+        if status != vrep.simx_return_ok:
+            print(f"Failed to start simulation: error code {status}")
+            return False
+        return True
+
+    def stop_simulation(self) -> bool:
+        if self.__client_id is None:
+            return False
+        status = vrep.simxStopSimulation(self.__client_id, vrep.simx_opmode_blocking)
+        if status != vrep.simx_return_ok:
+            print(f"Failed to stop simulation: error code {status}")
+            return False
+        return True
+
+    def get_object_handle(
+        self, name: str, operation_mode: int = vrep.simx_opmode_blocking
+    ) -> Optional[Tuple[int, int]]:
+        if self.__client_id is None:
+            return None
+        status, handle = vrep.simxGetObjectHandle(
+            self.__client_id, name, operation_mode
+        )
+        if status != vrep.simx_return_ok:
+            print(f"Failed to get handle for {name}: error code {status}")
+            return None
+        return status, handle
+
+    def set_object_position(
+        self,
+        name: str,
+        position: Tuple[float, float, float],
+        operation_mode: int = vrep.simx_opmode_blocking,
+    ) -> None:
+        _, handle = self.get_object_handle(name, operation_mode)
+        vrep.simxSetObjectPosition(
+            self.__client_id, handle, -1, position, operation_mode
+        )
+
+    def set_joint_target_velocity(
+        self, joint_handle, velocity, operation_mode=vrep.simx_opmode_oneshot
+    ) -> bool:
+        if self.__client_id is None:
+            return False
+        vrep.simxSetJointTargetVelocity(
+            self.__client_id, joint_handle, velocity, operation_mode
+        )
+        return True
+
+    def set_joint_target_position(
+        self, joint_handle, angle, operation_mode=vrep.simx_opmode_oneshot
+    ) -> bool:
+        if self.__client_id is None:
+            return False
+        vrep.simxSetJointTargetPosition(
+            self.__client_id, joint_handle, angle, operation_mode
+        )
+        return True
+
+    def __del__(self):
+        self.disconnect()
