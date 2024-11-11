@@ -109,7 +109,7 @@ class WheelMovementController:
         degree: float,
         speed: float,
         dynamics: Union[str, MovementDynamics] = MovementDynamics.CONSTANT,
-    ):
+    ) -> None:
         self.set_wheel_velocities(0)
         turn_time = self.__calculate_turn_time(degree, speed)
         rotation_speed = -speed if degree < 0 else speed
@@ -144,7 +144,7 @@ class WheelMovementController:
         velocity_calculator: Optional[
             Callable[[float, float, float], WheelVelocities]
         ] = None,
-    ):
+    ) -> None:
         decel_duration = 0.5 * movement_time
         self.__handle_velocity_change(speed, decel_duration, False, velocity_calculator)
 
