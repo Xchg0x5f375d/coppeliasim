@@ -18,11 +18,11 @@ def test_movement_patterns(
     )
     print("\nExecuting Circular Path - Constant Speed")
     pattern_movement_controller.execute_circular_pattern(
-        radius=1.0, speed=0.75, num_circles=2
+        radius=1.0, speed=0.5, num_circles=2
     )
     print("\nExecuting Circular Path - Counter-clockwise")
     pattern_movement_controller.execute_circular_pattern(
-        radius=0.5, speed=0.75, clockwise=False
+        radius=0.5, speed=0.5, clockwise=False
     )
 
 
