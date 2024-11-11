@@ -73,6 +73,7 @@ class VREPConnection:
         position: Tuple[float, float, float],
         operation_mode: int = vrep.simx_opmode_blocking,
     ) -> None:
+        print(f"Attempting to set position for object: {name}")
         _, handle = self.get_object_handle(name, operation_mode)
         vrep.simxSetObjectPosition(
             self.__client_id, handle, -1, position, operation_mode

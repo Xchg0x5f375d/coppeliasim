@@ -112,7 +112,7 @@ class WheelMovementController:
     ):
         self.set_wheel_velocities(0)
         turn_time = self.__calculate_turn_time(degree, speed)
-        rotation_speed = -speed if degree > 0 else speed
+        rotation_speed = -speed if degree < 0 else speed
         if dynamics == MovementDynamics.CONSTANT:
             velocities = self.compute_standard_wheel_velocities(0, 0, rotation_speed)
             self.set_wheel_velocities(velocities)
