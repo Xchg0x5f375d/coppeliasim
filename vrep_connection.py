@@ -81,23 +81,21 @@ class VREPConnection:
 
     def set_joint_target_velocity(
         self, joint_handle, velocity, operation_mode=vrep.simx_opmode_oneshot
-    ) -> bool:
+    ) -> None:
         if self.__client_id is None:
-            return False
+            return
         vrep.simxSetJointTargetVelocity(
             self.__client_id, joint_handle, velocity, operation_mode
         )
-        return True
 
     def set_joint_target_position(
         self, joint_handle, angle, operation_mode=vrep.simx_opmode_oneshot
-    ) -> bool:
+    ) -> None:
         if self.__client_id is None:
-            return False
+            return
         vrep.simxSetJointTargetPosition(
             self.__client_id, joint_handle, angle, operation_mode
         )
-        return True
 
     def __del__(self):
         self.disconnect()
