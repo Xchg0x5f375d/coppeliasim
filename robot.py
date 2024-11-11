@@ -4,15 +4,21 @@ import numpy as np
 
 from arm_movement_controller import ArmMovementController
 from robot_constants import RobotConstants
+from robot_position import RobotPosition
 from vrep_connection import VREPConnection
 from wheel_movement_controller import WheelMovementController
 
 
 class Robot:
-    def __init__(self, vrep_connection: VREPConnection = VREPConnection()):
+    def __init__(
+        self,
+        vrep_connection: VREPConnection = VREPConnection(),
+        position: RobotPosition = RobotPosition(),
+    ):
         self.vrep_connection = vrep_connection
         self.wheel_joints = self.__initialize_wheel_joints()
         self.arm_joints = self.__initialize_arm_joints()
+        self.position = position
         self.__validate_initialization()
         self.__setup_controllers()
 
