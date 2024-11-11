@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -21,6 +21,9 @@ class Robot:
         self.position = position
         self.__validate_initialization()
         self.__setup_controllers()
+
+    def set_position(self, position: RobotPosition) -> None:
+        self.vrep_connection.set_object_position("youBot", position.to_position_tuple())
 
     def __initialize_wheel_joints(self) -> Optional[np.ndarray]:
         self.wheel_joints = np.empty(4, dtype=int)
