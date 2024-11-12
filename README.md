@@ -3,9 +3,9 @@
 This repository contains different robotics exercises implemented in CoppeliaSim (formerly V-REP). Each exercise is maintained in a separate branch for better organization and clarity.
 
 ## Branch Structure
-- `exercise2` - Basic robot movement and control
-- `exercise3` - Robot trajectories and movement dynamics
-- `exercise4` - Odometry of the mobile robots
+- `Exercise-2` - Basic robot movement and control
+- `Exercise-3` - Robot trajectories and movement dynamics
+- `Exercise-4` - Odometry of the mobile robots
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ This repository contains different robotics exercises implemented in CoppeliaSim
 
 ## Getting Started
 1. Clone the repository:
-    `bash git clone https://github.com/Xchg0x5f375d/coppeliasim`
+    `git clone https://github.com/Xchg0x5f375d/coppeliasim`
 
 2. Switch to the desired exercise branch:
     `git checkout exercise1 # or exercise2, exercise3, etc.`
