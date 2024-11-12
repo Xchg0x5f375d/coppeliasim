@@ -42,12 +42,12 @@ def test_different_velocities(
 def test_complex_trajectories(
     robot: Robot, pattern_movement_controller: PatternMovementController
 ) -> None:
-    robot.set_position()
+    robot.position.set_position()
     print("\nExecuting Star Pattern - Constant Speed:")
     pattern_movement_controller.execute_star_pattern(
         radius=1.0, points=5, speed=10.0, dynamics=MovementDynamics.CONSTANT
     )
-    robot.set_position()
+    robot.position.set_position()
     print("\nExecuting Zigzag Pattern - Constant Speed:")
     pattern_movement_controller.execute_zigzag_pattern(
         length=1.0,
@@ -56,12 +56,12 @@ def test_complex_trajectories(
         speed=10.0,
         dynamics=MovementDynamics.CONSTANT,
     )
-    robot.set_position()
+    robot.position.set_position()
     print("\nExecuting Figure-Eight Pattern - Constant Speed:")
     pattern_movement_controller.execute_figure_eight_pattern(
         radius=0.5, speed=0.5, dynamics=MovementDynamics.CONSTANT
     )
-    robot.set_position()
+    robot.position.set_position()
     print("\nExecuting Spiral Pattern - Constant Speed:")
     pattern_movement_controller.execute_spiral_pattern(
         start_radius=0.5,
@@ -70,7 +70,7 @@ def test_complex_trajectories(
         num_revolutions=2,
         dynamics=MovementDynamics.CONSTANT,
     )
-    robot.set_position()
+    robot.position()
 
 
 def main():

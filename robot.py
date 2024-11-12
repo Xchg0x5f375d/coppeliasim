@@ -53,7 +53,9 @@ class Robot:
         if self.arm_joints is None:
             raise Exception("Failed to initialize arm joints")
 
-    def __initialize_position(self, position: Optional[RobotPosition] = None) -> None:
+    def __initialize_position(
+        self, position: Optional[RobotPosition] = None
+    ) -> RobotPosition:
         if position is None:
             return RobotPosition(self.vrep_connection)
         return position
