@@ -8,12 +8,19 @@ from constants.robot_constants import RobotConstants
 from models.movement_dynamics import MovementDynamics
 from models.path_types import PathType
 from models.wheel_velocities import WheelVelocities
+from robot.robot_position import RobotPosition
 from utils.vrep_connection import VREPConnection
 
 
 class WheelMovementController:
-    def __init__(self, vrep_connection: VREPConnection, wheel_joints: np.ndarray):
+    def __init__(
+        self,
+        vrep_connection: VREPConnection,
+        position: RobotPosition,
+        wheel_joints: np.ndarray,
+    ):
         self.vrep_connection = vrep_connection
+        self.position = position
         self.wheel_joints = wheel_joints
 
     def __calculate_movement_time(self, distance: float, speed: float) -> float:
@@ -95,6 +102,7 @@ class WheelMovementController:
             self.accelerate(speed, movement_time)
             self.decelerate(speed, movement_time)
         self.set_wheel_velocities(0)
+        self.position.odometry(0, distance)
 
     def turn_right(
         self,
@@ -117,6 +125,7 @@ class WheelMovementController:
             self.accelerate(rotation_speed, turn_time)
             self.decelerate(rotation_speed, turn_time)
         self.set_wheel_velocities(0)
+        self.position.odometry(degree, 0)
 
     def accelerate(
         self,

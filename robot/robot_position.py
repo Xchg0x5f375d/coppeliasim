@@ -58,7 +58,8 @@ class RobotPosition:
         for message in messages:
             print(message)
 
-    def odometry(self, angle_r: float, distance_r: float) -> None:
-        self.local_yaw += angle_r
+    def odometry(self, angle_deg: float, distance_r: float) -> None:
+        angle_rad = math.radians(angle_deg)
+        self.local_yaw += angle_rad
         self.local_x += distance_r * math.cos(self.local_yaw)
         self.local_y += distance_r * math.sin(self.local_yaw)

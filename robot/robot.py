@@ -16,10 +16,10 @@ class Robot:
         position: Optional[RobotPosition] = None,
     ):
         self.vrep_connection = vrep_connection
+        self.position = self.__initialize_position(position)
         self.wheel_joints = self.__initialize_wheel_joints()
         self.arm_joints = self.__initialize_arm_joints()
         self.__validate_initialization()
-        self.position = self.__initialize_position(position)
         self.__setup_controllers()
 
     def __initialize_wheel_joints(self) -> Optional[np.ndarray]:
@@ -64,7 +64,7 @@ class Robot:
 
     def __setup_controllers(self) -> None:
         self.wheel_movement_controller = WheelMovementController(
-            self.vrep_connection, self.wheel_joints
+            self.vrep_connection, self.position, self.wheel_joints
         )
         self.arm_movement_controller = ArmMovementController(
             self.vrep_connection, self.arm_joints
