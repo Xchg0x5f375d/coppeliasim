@@ -13,13 +13,13 @@ class Robot:
     def __init__(
         self,
         vrep_connection: VREPConnection = VREPConnection(),
-        position: RobotPosition = RobotPosition(),
+        position: Optional[RobotPosition] = None,
     ):
         self.vrep_connection = vrep_connection
         self.wheel_joints = self.__initialize_wheel_joints()
         self.arm_joints = self.__initialize_arm_joints()
-        self.position = position
         self.__validate_initialization()
+        self.position = self.__initialize_position(position)
         self.__setup_controllers()
 
     def __initialize_wheel_joints(self) -> Optional[np.ndarray]:
@@ -52,6 +52,11 @@ class Robot:
 
         if self.arm_joints is None:
             raise Exception("Failed to initialize arm joints")
+
+    def __initialize_position(self, position: Optional[RobotPosition] = None) -> None:
+        if position is None:
+            return RobotPosition(self.vrep_connection)
+        return position
 
     def __setup_controllers(self) -> None:
         self.wheel_movement_controller = WheelMovementController(

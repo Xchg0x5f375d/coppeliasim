@@ -48,8 +48,12 @@ class RobotPosition:
         global_x, local_x = np.round(pos[1][0], 5), np.round(self.local_x, 5)
         global_y, local_y = np.round(pos[1][1], 5), np.round(self.local_y, 5)
         global_yaw, local_yaw = np.round(orient[1][2], 5), np.round(self.local_yaw)
-        print(f"global [PosX, PosY, AngZ]: {global_x}, {global_y}, {global_yaw}")
-        print(f"local [PosX, PosY, AngZ]: {local_x}, {local_y}, {local_yaw}")
+        messages = (
+            f"Global [PosX, PosY, AngZ]: {global_x}, {global_y}, {global_yaw}\n",
+            f"Local [PosX, PosY, AngZ]: {local_x}, {local_y}, {local_yaw}"
+        )
+        for message in messages:
+            print(message)
 
     def odometry(self, angle_r: float, distance_r: float) -> None:
         self.local_yaw += angle_r
