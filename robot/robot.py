@@ -2,11 +2,11 @@ from typing import List, Optional
 
 import numpy as np
 
-from arm_movement_controller import ArmMovementController
-from robot_constants import RobotConstants
-from robot_position import RobotPosition
-from vrep_connection import VREPConnection
-from wheel_movement_controller import WheelMovementController
+from constants.robot_constants import RobotConstants
+from controllers.arm_movement_controller import ArmMovementController
+from controllers.wheel_movement_controller import WheelMovementController
+from robot.robot_position import RobotPosition
+from utils.vrep_connection import VREPConnection
 
 
 class Robot:
@@ -40,7 +40,9 @@ class Robot:
     def __initialize_arm_joints(self) -> Optional[List[int]]:
         self.arm_joints = [0] * 5
         for i in range(5):
-            handle = self.vrep_connection.get_object_handle(f"youBotArmJoint{i}")
+            handle = self.vrep_connection.get_object_handle(
+                f"{RobotConstants.YOUBOT_NAME}ArmJoint{i}"
+            )
             if handle is None:
                 return False
             self.arm_joints[i] = handle

@@ -3,8 +3,8 @@ from typing import Tuple
 
 import numpy as np
 
-from robot_constants import RobotConstants
-from vrep_connection import VREPConnection
+from constants.robot_constants import RobotConstants
+from utils.vrep_connection import VREPConnection
 
 
 class RobotPosition:
@@ -24,7 +24,10 @@ class RobotPosition:
         self.local_y = 0.0
         self.local_yaw = 0.0
 
-    def set_position(self, position: Tuple[float, float, float] | float | int) -> None:
+    def set_position(
+        self,
+        position: Tuple[float, float, float] | float | int = (-4.700, 0.200, 0.0957),
+    ) -> None:
         if isinstance(position, (float, int)):
             position = (float(position),) * 3
         elif len(position) != 3:
@@ -50,7 +53,7 @@ class RobotPosition:
         global_yaw, local_yaw = np.round(orient[1][2], 5), np.round(self.local_yaw)
         messages = (
             f"Global [PosX, PosY, AngZ]: {global_x}, {global_y}, {global_yaw}\n",
-            f"Local [PosX, PosY, AngZ]: {local_x}, {local_y}, {local_yaw}"
+            f"Local [PosX, PosY, AngZ]: {local_x}, {local_y}, {local_yaw}",
         )
         for message in messages:
             print(message)

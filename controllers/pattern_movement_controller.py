@@ -2,7 +2,10 @@ import math
 import time
 from typing import Any, Callable, Dict
 
-from wheel_movement_controller import MovementDynamics, WheelMovementController
+from controllers.wheel_movement_controller import (
+    MovementDynamics,
+    WheelMovementController,
+)
 
 
 class PatternMovementController:

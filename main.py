@@ -1,6 +1,9 @@
-from pattern_movement_controller import PatternMovementController
-from robot import Robot
-from wheel_movement_controller import MovementDynamics, WheelMovementController
+from controllers.pattern_movement_controller import PatternMovementController
+from controllers.wheel_movement_controller import (
+    MovementDynamics,
+    WheelMovementController,
+)
+from robot.robot import Robot
 
 
 def test_movement_patterns(
@@ -29,14 +32,14 @@ def test_movement_patterns(
 def test_different_velocities(
     pattern_movement_controller: PatternMovementController,
 ) -> None:
-    print("\Executing Forward Movement with Acceleration/Deceleration:")
+    print("\nExecuting Forward Movement with Acceleration/Deceleration:")
     pattern_movement_controller.wheel_movement_controller.move_forward(
         distance=5.0, speed=15.0, dynamics=MovementDynamics.ACCEL_DECEL
     )
     pattern_movement_controller.wheel_movement_controller.move_forward(
         distance=5.0, speed=-15.0, dynamics=MovementDynamics.ACCEL_DECEL
     )
-    print("\Executing Backward Movement with Acceleration/Deceleration:")
+    print("\nExecuting Backward Movement with Acceleration/Deceleration:")
 
 
 def test_complex_trajectories(

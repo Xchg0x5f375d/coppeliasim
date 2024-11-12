@@ -1,22 +1,14 @@
 import math
 import time
-from enum import Enum
-from typing import Callable, Literal, Optional, Union
+from typing import Callable, Optional, Union
 
 import numpy as np
 
-from robot_constants import RobotConstants
-from vrep_connection import VREPConnection
-from wheel_velocities import WheelVelocities
-
-PathType = Literal["circle", "ellipse"]
-
-
-class MovementDynamics(Enum):
-    CONSTANT = "constant"
-    ACCELERATE = "accel"
-    DECELERATE = "decel"
-    ACCEL_DECEL = "accel_decel"
+from constants.robot_constants import RobotConstants
+from models.movement_dynamics import MovementDynamics
+from models.path_types import PathType
+from models.wheel_velocities import WheelVelocities
+from utils.vrep_connection import VREPConnection
 
 
 class WheelMovementController:

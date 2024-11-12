@@ -2,7 +2,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-import vrep
+from utils import vrep
 
 
 class VREPConnection:

@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple
 
-from vrep_connection import VREPConnection
+from utils.vrep_connection import VREPConnection
 
 
 class ArmMovementController:
