@@ -26,6 +26,8 @@ class RobotConstants:
         "fr",
     ]
 
+    YOUBOT_NAME = "youBot"
+
     @staticmethod
     def get_wheel_radius() -> float:
         return RobotConstants.WHEEL_DIAMETER / 2
