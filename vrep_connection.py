@@ -1,5 +1,7 @@
 from typing import Optional, Tuple
 
+import numpy as np
+
 import vrep
 
 
@@ -66,6 +68,35 @@ class VREPConnection:
             print(f"Failed to get handle for {name}: error code {status}")
             return None
         return status, handle
+
+    def get_object_position(
+        self,
+        object_handle: int,
+        reference_handle: int = -1,
+        operation_mode: int = vrep.simx_opmode_blocking,
+    ) -> Tuple[int, np.ndarray]:
+        if self.__client_id is None:
+            return -1, np.zeros(3)
+        return vrep.simxGetObjectPosition(
+            self.__client_id, object_handle, reference_handle, operation_mode
+        )
+
+    def get_object_orientation(
+        self,
+        object_handle: int,
+        reference_handle: int = -1,
+        operation_mode: int = vrep.simx_opmode_blocking,
+    ) -> Tuple[int, np.ndarray]:
+        if self.__client_id is None:
+            return -1, np.zeros(3)
+        return vrep.simxGetObjectOrientation(
+            self.__client_id, object_handle, reference_handle, operation_mode
+        )
+
+    def get_ping_time(self) -> int:
+        if self.__client_id is None:
+            return -1
+        return vrep.simxGetPingTime(self.__client_id)
 
     def set_object_position(
         self,
