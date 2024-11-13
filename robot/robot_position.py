@@ -43,23 +43,33 @@ class RobotPosition:
         _, handle = self.vrep_connection.get_object_handle(RobotConstants.YOUBOT_NAME)
         base_pos = self.vrep_connection.get_object_position(handle)
         base_orient = self.vrep_connection.get_object_orientation(handle)
+        if base_pos[0] != -1:
+            self.x = np.round(base_pos[1][0], 5)
+            self.y = np.round(base_pos[1][1], 5)
+        if base_orient[0] != -1:
+            self.yaw = np.round(base_orient[1][2], 5)
         self.vrep_connection.get_ping_time()
         return base_pos, base_orient
 
     def print_position(self) -> None:
         pos, orient = self.check_pose()
-        global_x, local_x = np.round(pos[1][0], 5), np.round(self.local_x, 5)
-        global_y, local_y = np.round(pos[1][1], 5), np.round(self.local_y, 5)
-        global_yaw, local_yaw = np.round(orient[1][2], 5), np.round(self.local_yaw)
-        messages = (
-            f"Global [PosX, PosY, AngZ]: {global_x}, {global_y}, {global_yaw}\n",
-            f"Local [PosX, PosY, AngZ]: {local_x}, {local_y}, {local_yaw}",
+        global_pos = (
+            f"global [PosX, PosY, AngZ]: "
+            f"{np.round(pos[1][0], 5)}, "
+            f"{np.round(pos[1][1], 5)}, "
+            f"{np.round(orient[1][2], 5)}"
         )
-        for message in messages:
-            print(message)
+        local_pos = (
+            f"local [PosX, PosY, AngZ]: "
+            f"{np.round(self.local_x, 5)}, "
+            f"{np.round(self.local_y, 5)}, "
+            f"{np.round(self.local_yaw, 5)}"
+        )
+        print(global_pos)
+        print(local_pos)
 
     def odometry(self, angle_deg: float, distance_r: float) -> None:
         angle_rad = math.radians(angle_deg)
-        self.local_yaw += angle_rad
+        self.local_yaw += math.atan2(math.sin(angle_rad), math.cos(angle_rad))
         self.local_x += distance_r * math.cos(self.local_yaw)
         self.local_y += distance_r * math.sin(self.local_yaw)
