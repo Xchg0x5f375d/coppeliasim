@@ -4,7 +4,6 @@ import numpy as np
 
 from constants.robot_constants import RobotConstants
 from controllers.arm_movement_controller import ArmMovementController
-from controllers.wheel_movement_controller import WheelMovementController
 from robot.robot_position import RobotPosition
 from utils.vrep_connection import VREPConnection
 
@@ -63,6 +62,8 @@ class Robot:
         return position
 
     def __setup_controllers(self) -> None:
+        from controllers.wheel_movement_controller import WheelMovementController
+
         self.wheel_movement_controller = WheelMovementController(
             self.vrep_connection, self.position, self.wheel_joints
         )
