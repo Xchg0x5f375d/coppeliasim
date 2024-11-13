@@ -51,7 +51,7 @@ class RobotPosition:
         self.vrep_connection.get_ping_time()
         return base_pos, base_orient
 
-    def print_position(self) -> None:
+    def get_position(self) -> tuple[str, str]:
         pos, orient = self.check_pose()
         global_pos = (
             f"global [PosX, PosY, AngZ]: "
@@ -65,11 +65,14 @@ class RobotPosition:
             f"{np.round(self.local_y, 5)}, "
             f"{np.round(self.local_yaw, 5)}"
         )
-        print(global_pos)
-        print(local_pos)
+        return global_pos, local_pos
 
     def odometry(self, angle_deg: float, distance_r: float) -> None:
         angle_rad = math.radians(angle_deg)
         self.local_yaw += math.atan2(math.sin(angle_rad), math.cos(angle_rad))
         self.local_x += distance_r * math.cos(self.local_yaw)
         self.local_y += distance_r * math.sin(self.local_yaw)
+
+    def print_position(self) -> None:
+        global_pos, local_pos = self.get_position()
+        print(global_pos, local_pos)
