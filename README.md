@@ -1,11 +1,11 @@
 # CoppeliaSim Introduction to Autonomous Systems Course
 
-This repository contains different robotics exercises implemented in CoppeliaSim (formerly V-REP). Each exercise is maintained in a separate branch for better organization and clarity.
+This repository contains different robotics exercises implemented in CoppeliaSim (formerly V-REP). Each exercise is maintained in a separate file for better organization and clarity.
 
-## Branch Structure
-- `Exercise-2` - Basic robot movement and control
-- `Exercise-3` - Robot trajectories and movement dynamics
-- `Exercise-4` - Odometry of the mobile robots
+## File Structure
+- `exercise2.py` - Basic robot movement and control
+- `exercise3.py` - Robot trajectories and movement dynamics
+- `exercise4.py` - Odometry of the mobile robots
 
 ## Prerequisites
 
@@ -18,14 +18,11 @@ This repository contains different robotics exercises implemented in CoppeliaSim
 1. Clone the repository:
     `git clone https://github.com/Xchg0x5f375d/coppeliasim`
 
-2. Switch to the desired exercise branch:
-    `git checkout exercise1 # or exercise2, exercise3, etc.`
+2. Start CoppeliaSim simulator
 
-3. Start CoppeliaSim simulator
-
-4. Load the corresponding scene file:
+3. Load the corresponding scene file:
    - Located in `scenes/` directory
    - Match the scene with current exercise
 
-5. Run the main script:
-    `python main.py`
+4. Run the desired exercise file:
+    `python exercise2.py`
