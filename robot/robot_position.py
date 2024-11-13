@@ -67,11 +67,11 @@ class RobotPosition:
         )
         return global_pos, local_pos
 
-    def odometry(self, angle_deg: float, distance_r: float) -> None:
+    def odometry(self, angle_deg: float, distance: float) -> None:
         angle_rad = math.radians(angle_deg)
         self.local_yaw += math.atan2(math.sin(angle_rad), math.cos(angle_rad))
-        self.local_x += distance_r * math.cos(self.local_yaw)
-        self.local_y += distance_r * math.sin(self.local_yaw)
+        self.local_x += distance * math.cos(self.local_yaw)
+        self.local_y += distance * math.sin(self.local_yaw)
 
     def print_position(self) -> None:
         global_pos, local_pos = self.get_position()
