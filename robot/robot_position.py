@@ -75,4 +75,4 @@ class RobotPosition:
 
     def print_position(self) -> None:
         global_pos, local_pos = self.get_position()
-        print(global_pos, local_pos)
+        print(global_pos, local_pos, sep="\n")
