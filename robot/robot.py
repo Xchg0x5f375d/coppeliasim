@@ -39,11 +39,11 @@ class Robot:
     def __initialize_arm_joints(self) -> Optional[List[int]]:
         self.arm_joints = [0] * 5
         for i in range(5):
-            handle = self.vrep_connection.get_object_handle(
+            _, handle = self.vrep_connection.get_object_handle(
                 f"{RobotConstants.YOUBOT_NAME}ArmJoint{i}"
             )
             if handle is None:
-                return False
+                return None
             self.arm_joints[i] = handle
         return self.arm_joints
 

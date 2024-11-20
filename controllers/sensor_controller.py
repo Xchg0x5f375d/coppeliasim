@@ -37,25 +37,19 @@ class SensorController:
     def get_left_front_right_distances(self) -> Tuple[float, float, float]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokouyo1_handle)
         _, _, aux_data2 = self.vrep_connection.read_vision_sensor(self.hokouyo2_handle)
-
         if not aux_data1 or not aux_data2:
             return -1.0, -1.0, -1.0
-
         last_index = int(len(aux_data1[1]) / 4) - 1
-
         left_distance = self.__get_distance(aux_data1, int(last_index * (30 / 120)))
         front_distance = self.__get_distance(aux_data1, last_index)
         right_distance = self.__get_distance(aux_data2, int(last_index * (90 / 120)))
-
         return left_distance, front_distance, right_distance
 
     def detect_obstacles(self, threshold=5.0) -> List[Tuple[float, float]]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokouyo1_handle)
         obstacles: List[Tuple[float, float]] = []
-
         last_index = int(len(aux_data1) / 4 - 1)
         front_distance = self.__get_distance(aux_data1, last_index)
-
         if front_distance < threshold:
             x = self.position.local_x + front_distance * math.cos(
                 self.position.local_yaw
@@ -63,8 +57,7 @@ class SensorController:
             y = self.position.local_y + front_distance * math.sin(
                 self.position.local_yaw
             )
-            obstacles.append((x, y))
-
+            obstacles.append((round(x, 5), round(y, 5)))
         return obstacles
 
     def print_distances(self) -> None:
@@ -75,22 +68,23 @@ class SensorController:
         print("Distance Right: " + str(right) + "\n")
 
     def visualize_obstacles(
-        self, obstacles: List[Tuple[float, float]], save_path: Optional[str] = None
+        self,
+        obstacles: List[Tuple[float, float]],
+        save_path: Optional[str] = "image.png",
     ) -> None:
         x_coords = [obs[0] for obs in obstacles]
         y_coords = [obs[1] for obs in obstacles]
-
         plt.figure(figsize=(10, 10))
         plt.plot(x_coords, y_coords, "ko", label="Obstacles")
-        plt.plot(self.position.x, self.position.y, "r*", label="Robot Position")
-
+        plt.plot(
+            self.position.local_x, self.position.local_y, "r*", label="Robot Position"
+        )
         plt.grid(True)
         plt.axis("equal")
         plt.title("Obstacle Detection Results")
         plt.xlabel("X Position (m)")
         plt.ylabel("Y Position (m)")
         plt.legend()
-
         if save_path:
             plt.savefig(save_path)
         plt.show()
