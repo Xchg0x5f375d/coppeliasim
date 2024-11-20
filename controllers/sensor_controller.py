@@ -49,16 +49,20 @@ class SensorController:
 
         return left_distance, front_distance, right_distance
 
-    def detect_obstacles(self) -> List[Tuple[float, float]]:
+    def detect_obstacles(self, threshold=5.0) -> List[Tuple[float, float]]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokouyo1_handle)
         obstacles: List[Tuple[float, float]] = []
 
         last_index = int(len(aux_data1) / 4 - 1)
         front_distance = self.__get_distance(aux_data1, last_index)
 
-        if front_distance < 5.0:
-            x = self.position.x + front_distance * math.cos(self.position.local_yaw)
-            y = self.position.y + front_distance * math.sin(self.position.local_yaw)
+        if front_distance < threshold:
+            x = self.position.local_x + front_distance * math.cos(
+                self.position.local_yaw
+            )
+            y = self.position.local_y + front_distance * math.sin(
+                self.position.local_yaw
+            )
             obstacles.append((x, y))
 
         return obstacles
