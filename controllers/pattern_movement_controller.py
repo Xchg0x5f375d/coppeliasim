@@ -391,7 +391,7 @@ class PatternMovementController:
 
     def perform_360_scan(
         self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
-    ) -> List[Tuple[float, float]]:
+    ) -> None:
         obstacles: List[Tuple[float, float]] = []
         self.wheel_movement_controller.move_forward(-1.0, speed)
         self.wheel_movement_controller.sensor_controller.print_distances()
@@ -402,4 +402,4 @@ class PatternMovementController:
             )
             self.wheel_movement_controller.sensor_controller.print_distances()
             time.sleep(0.05)
-        return obstacles
+        self.wheel_movement_controller.sensor_controller.visualize_obstacles(obstacles)
