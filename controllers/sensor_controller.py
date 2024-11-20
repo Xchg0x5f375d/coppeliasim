@@ -63,6 +63,13 @@ class SensorController:
 
         return obstacles
 
+    def print_distances(self) -> None:
+        left, front, right = self.get_left_front_right_distances()
+        print("\nRead sensors\n")
+        print("Distance Left: " + str(left))
+        print("Distance Front: " + str(front))
+        print("Distance Right: " + str(right) + "\n")
+
     def visualize_obstacles(
         self, obstacles: List[Tuple[float, float]], save_path: Optional[str] = None
     ) -> None:

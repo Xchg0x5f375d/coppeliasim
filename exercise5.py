@@ -7,7 +7,7 @@ def main():
     pattern_movement_controller = PatternMovementController(
         robot.wheel_movement_controller
     )
-    obstacles = pattern_movement_controller.scan_and_move()
+    obstacles = pattern_movement_controller.perform_360_scan()
     robot.sensor_controller.visualize_obstacles(obstacles)
 
 

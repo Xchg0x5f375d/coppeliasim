@@ -94,19 +94,24 @@ class WheelMovementController:
     ) -> None:
         if isinstance(dynamics, str):
             dynamics = MovementDynamics(dynamics)
+        if speed < 0:
+            raise ValueError(
+                "Speed should be positive, use negative distance for backward movement"
+            )
+        actual_speed = -speed if distance < 0 else speed
         self.set_wheel_velocities(0)
-        movement_time = self.__calculate_movement_time(distance, speed)
+        movement_time = self.__calculate_movement_time(abs(distance), speed)
         if dynamics == MovementDynamics.CONSTANT:
-            velocities = self.compute_standard_wheel_velocities(speed, 0, 0)
+            velocities = self.compute_standard_wheel_velocities(actual_speed, 0, 0)
             self.set_wheel_velocities(velocities)
             time.sleep(movement_time)
         elif dynamics == MovementDynamics.ACCELERATE:
-            self.accelerate(speed, movement_time)
+            self.accelerate(actual_speed, movement_time)
         elif dynamics == MovementDynamics.DECELERATE:
-            self.decelerate(speed, movement_time)
+            self.decelerate(actual_speed, movement_time)
         elif dynamics == MovementDynamics.ACCEL_DECEL:
-            self.accelerate(speed, movement_time)
-            self.decelerate(speed, movement_time)
+            self.accelerate(actual_speed, movement_time)
+            self.decelerate(actual_speed, movement_time)
         self.set_wheel_velocities(0)
         self.position.odometry(0, distance)
 
