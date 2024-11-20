@@ -2,6 +2,7 @@ import math
 from typing import Tuple
 
 import numpy as np
+from numpy import ndarray
 
 from constants.robot_constants import RobotConstants
 from utils.vrep_connection import VREPConnection
@@ -32,14 +33,13 @@ class RobotPosition:
             position = (float(position),) * 3
         elif len(position) != 3:
             raise ValueError("Position must be a tuple of 3 coordinates")
-        self.vrep_connection.set_object_position(
-            RobotConstants.YOUBOT_NAME, self.to_position_tuple()
-        )
+        self.x, self.y, self.yaw = position
+        self.vrep_connection.set_object_position(RobotConstants.YOUBOT_NAME, position)
 
     def to_position_tuple(self) -> tuple[float, float, float]:
-        return (self.x, self.y, self.yaw)
+        return self.x, self.y, self.yaw
 
-    def check_pose(self) -> tuple[tuple[int, list], tuple[int, list]]:
+    def check_pose(self) -> tuple[tuple[int, ndarray], tuple[int, ndarray]]:
         _, handle = self.vrep_connection.get_object_handle(RobotConstants.YOUBOT_NAME)
         base_pos = self.vrep_connection.get_object_position(handle)
         base_orient = self.vrep_connection.get_object_orientation(handle)

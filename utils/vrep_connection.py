@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -127,6 +127,28 @@ class VREPConnection:
         vrep.simxSetJointTargetPosition(
             self.__client_id, joint_handle, angle, operation_mode
         )
+
+    def set_integer_signal(
+        self, signal: Tuple[str, int], operation_mode=vrep.simx_opmode_oneshot
+    ) -> int:
+        if self.__client_id is None:
+            return -1
+        signal_name, signal_value = signal
+        return vrep.simxSetIntegerSignal(
+            self.__client_id, signal_name, signal_value, operation_mode
+        )
+
+    def read_vision_sensor(
+        self,
+        sensor_handle: Optional[Tuple[int, int]],
+        operation_mode=vrep.simx_opmode_blocking,
+    ) -> Tuple[int, bool, List[List[float]]]:
+        if self.__client_id is None:
+            return -1, False, []
+        return_code, detection_state, aux_values = vrep.simxReadVisionSensor(
+            self.__client_id, sensor_handle, operation_mode
+        )
+        return return_code, detection_state, aux_values
 
     def __del__(self):
         self.disconnect()

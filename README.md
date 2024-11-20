@@ -12,7 +12,7 @@ This repository contains different robotics exercises implemented in CoppeliaSim
 - Python 3.x
 - CoppeliaSim EDU/PRO V4.x
 - Required Python packages:
-    `numpy`
+    `numpy matplotlib`
 
 ## Getting Started
 1. Clone the repository:

@@ -1,6 +1,8 @@
 import math
 import time
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, List, Tuple
+
+from numpy.ma.core import angle
 
 from controllers.wheel_movement_controller import (
     MovementDynamics,
@@ -12,7 +14,8 @@ class PatternMovementController:
     def __init__(self, wheel_movement_controller: WheelMovementController):
         self.wheel_movement_controller = wheel_movement_controller
 
-    def __print_parameters(self, pattern_name: str, params: Dict[str, Any]) -> None:
+    @staticmethod
+    def __print_parameters(pattern_name: str, params: Dict[str, Any]) -> None:
         print(f"\nExecuting {pattern_name} movement pattern...")
         print("Parameters:")
         for key, value in params.items():
@@ -21,7 +24,8 @@ class PatternMovementController:
             else:
                 print(f"- {key}: {value}")
 
-    def __print_calculated_values(self, values: Dict[str, float]) -> None:
+    @staticmethod
+    def __print_calculated_values(values: Dict[str, float]) -> None:
         print("\nCalculated values:")
         for key, value in values.items():
             print(f"- {key}: {value:.2f}")
@@ -34,18 +38,18 @@ class PatternMovementController:
     ) -> None:
         start_time = time.time()
 
-        def apply_dynamics(progress: float, speed: float) -> float:
+        def apply_dynamics(inner_progress: float, speed: float) -> float:
             if dynamics == MovementDynamics.CONSTANT:
                 return speed
             elif dynamics == MovementDynamics.ACCELERATE:
-                return speed * progress
+                return speed * inner_progress
             elif dynamics == MovementDynamics.DECELERATE:
-                return speed * (1 - progress)
+                return speed * (1 - inner_progress)
             elif dynamics == MovementDynamics.ACCEL_DECEL:
-                if progress < 0.5:
-                    return speed * (2 * progress)
+                if inner_progress < 0.5:
+                    return speed * (2 * inner_progress)
                 else:
-                    return speed * (2 * (1 - progress))
+                    return speed * (2 * (1 - inner_progress))
             return speed
 
         while (elapsed_time := time.time() - start_time) < time_to_complete:
@@ -81,7 +85,7 @@ class PatternMovementController:
         }
         self.__print_calculated_values(calculated_values)
         for i, side_length in enumerate(sides):
-            print(f"\nMoving along side {i+1} of rectangle ({side_length} meters)")
+            print(f"\nMoving along side {i + 1} of rectangle ({side_length} meters)")
             self.wheel_movement_controller.move_forward(side_length, speed, dynamics)
             print("Turning 90 degrees to the right")
             self.wheel_movement_controller.turn_right(90, speed)
@@ -251,31 +255,35 @@ class PatternMovementController:
         }
         self.__print_calculated_values(calculated_values)
 
-        def calculate_velocities(progress: float, speed_multiplier: float) -> None:
-            angle = progress * num_revolutions * 2 * math.pi
+        def calculate_velocities(
+            inner_progress: float, inner_speed_multiplier: float
+        ) -> None:
+            angle = inner_progress * num_revolutions * 2 * math.pi
             if not clockwise:
                 angle = -angle
-            current_radius = start_radius + (progress * (end_radius - start_radius))
-            inst_angular_velocity = (speed / current_radius) * speed_multiplier
+            current_radius = start_radius + (
+                inner_progress * (end_radius - start_radius)
+            )
+            inst_angular_velocity = (speed / current_radius) * inner_speed_multiplier
             if not clockwise:
                 inst_angular_velocity = -inst_angular_velocity
             velocities = self.wheel_movement_controller.calculate_path_adjusted_mecanum_velocities(
-                speed * speed_multiplier, 0, inst_angular_velocity, angle
+                speed * inner_speed_multiplier, 0, inst_angular_velocity, angle
             )
             self.wheel_movement_controller.set_wheel_velocities(velocities)
 
-        def apply_dynamics(progress: float) -> float:
+        def apply_dynamics(inner_progress: float) -> float:
             if dynamics == MovementDynamics.CONSTANT:
                 return 1.0
             elif dynamics == MovementDynamics.ACCELERATE:
-                return progress
+                return inner_progress
             elif dynamics == MovementDynamics.DECELERATE:
-                return 1.0 - progress
+                return 1.0 - inner_progress
             elif dynamics == MovementDynamics.ACCEL_DECEL:
-                if progress < 0.5:
-                    return 2 * progress
+                if inner_progress < 0.5:
+                    return 2 * inner_progress
                 else:
-                    return 2 * (1 - progress)
+                    return 2 * (1 - inner_progress)
             return 1.0
 
         start_time = time.time()
@@ -379,3 +387,31 @@ class PatternMovementController:
         print(
             f"Completed {num_zigzags} zigzags over {length:.2f} meters with {width:.2f} meter width"
         )
+
+    def perform_360_scan(
+        self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
+    ) -> List[Tuple[float, float]]:
+        obstacles: List[Tuple[float, float]] = []
+        for _ in range(steps):
+            self.wheel_movement_controller.turn_right(angle_per_step, speed)
+            obstacles.extend(
+                self.wheel_movement_controller.sensor_controller.detect_obstacles()
+            )
+            left, front, right = (
+                self.wheel_movement_controller.sensor_controller.get_left_front_right_distances()
+            )
+            print(
+                f"Distances - Left: {left:.2f}, Front: {front:.2f}, Right: {right:.2f}"
+            )
+            time.sleep(0.05)
+        return obstacles
+
+    def scan_and_move(
+        self, scan_points: int = 1, distance=1.0, speed=5.0, degree=90.0
+    ) -> List[Tuple[float, float]]:
+        obstacles: List[Tuple[float, float]] = []
+        for _ in range(scan_points):
+            obstacles.extend(self.perform_360_scan())
+            self.wheel_movement_controller.move_forward(distance, speed)
+            self.wheel_movement_controller.turn_right(degree, speed)
+        return obstacles

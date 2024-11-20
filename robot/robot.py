@@ -62,10 +62,15 @@ class Robot:
         return position
 
     def __setup_controllers(self) -> None:
+        from controllers.sensor_controller import SensorController
         from controllers.wheel_movement_controller import WheelMovementController
 
+        self.sensor_controller = SensorController(self.vrep_connection, self.position)
         self.wheel_movement_controller = WheelMovementController(
-            self.vrep_connection, self.position, self.wheel_joints
+            self.vrep_connection,
+            self.position,
+            self.wheel_joints,
+            self.sensor_controller,
         )
         self.arm_movement_controller = ArmMovementController(
             self.vrep_connection, self.arm_joints

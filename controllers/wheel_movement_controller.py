@@ -5,6 +5,7 @@ from typing import Callable, Optional, Union
 import numpy as np
 
 from constants.robot_constants import RobotConstants
+from controllers.sensor_controller import SensorController
 from models.movement_dynamics import MovementDynamics
 from models.path_types import PathType
 from models.wheel_velocities import WheelVelocities
@@ -18,19 +19,23 @@ class WheelMovementController:
         vrep_connection: VREPConnection,
         position: RobotPosition,
         wheel_joints: np.ndarray,
+        sensor_controller: SensorController,
     ):
         self.vrep_connection = vrep_connection
         self.position = position
         self.wheel_joints = wheel_joints
+        self.sensor_controller = sensor_controller
 
-    def __calculate_movement_time(self, distance: float, speed: float) -> float:
+    @staticmethod
+    def __calculate_movement_time(distance: float, speed: float) -> float:
         return (
             (distance / RobotConstants.WHEEL_PERIMETER)
             * (2 * math.pi / abs(speed))
             * RobotConstants.MOVEMENT_CORRECTION_FACTOR
         )
 
-    def __calculate_turn_time(self, degree: float, speed: float) -> float:
+    @staticmethod
+    def __calculate_turn_time(degree: float, speed: float) -> float:
         return (
             (
                 (RobotConstants.get_total_wheel_distance())
@@ -61,8 +66,9 @@ class WheelMovementController:
             self.set_wheel_velocities(velocities)
             time.sleep(dt)
 
+    @staticmethod
     def __compute_path_velocity_scale(
-        self, angle: Optional[float], path_type: PathType
+        angle: Optional[float], path_type: PathType
     ) -> float:
         if angle is not None and path_type == "ellipse":
             return 1.0 + 0.2 * math.cos(2 * angle)
@@ -149,8 +155,9 @@ class WheelMovementController:
         decel_duration = 0.5 * movement_time
         self.__handle_velocity_change(speed, decel_duration, False, velocity_calculator)
 
+    @staticmethod
     def compute_standard_wheel_velocities(
-        self, forw_back_vel: float, left_right_vel: float, rot_vel: float
+        forw_back_vel: float, left_right_vel: float, rot_vel: float
     ) -> np.ndarray:
         front_left = forw_back_vel - left_right_vel - rot_vel
         rear_left = forw_back_vel - left_right_vel - rot_vel
@@ -158,18 +165,18 @@ class WheelMovementController:
         front_right = forw_back_vel + left_right_vel + rot_vel
         return np.array([front_left, rear_left, rear_right, front_right])
 
+    @staticmethod
     def compute_mecanum_wheel_velocities(
-        self,
         forw_back_vel: float,
         left_right_vel: float,
         rot_vel: float,
         velocity_scale: float = 1.0,
     ) -> np.ndarray:
-        L = RobotConstants.get_half_wheel_distance_vertical()
-        W = RobotConstants.get_half_wheel_distance_horizontal()
-        R = RobotConstants.get_wheel_radius()
-        wheel_factor = 1 / R
-        moment_arm = L + W
+        l = RobotConstants.get_half_wheel_distance_vertical()
+        w = RobotConstants.get_half_wheel_distance_horizontal()
+        r = RobotConstants.get_wheel_radius()
+        wheel_factor = 1 / r
+        moment_arm = l + w
         front_left = (
             wheel_factor
             * (forw_back_vel - left_right_vel - moment_arm * rot_vel)
