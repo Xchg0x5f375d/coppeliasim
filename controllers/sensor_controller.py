@@ -61,7 +61,7 @@ class SensorController:
         self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
         self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
 
-    def get_distances(self) -> Tuple[float, float, float]:
+    def get_left_front_right_distances(self) -> Tuple[float, float, float]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
         _, _, aux_data2 = self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
         last_index = int(len(aux_data1[1]) / 4) - 1
@@ -71,7 +71,7 @@ class SensorController:
         return left_distance, front_distance, right_distance
 
     def detect_obstacles(self, threshold=5.0) -> List[Tuple[float, float]]:
-        aux_data1, _ = self.__read_sensors_streaming()
+        self.__read_sensors_streaming()
         time.sleep(0.01)
         aux_data1, _ = self.__read_sensors_buffer()
         if not aux_data1 or not aux_data1[1]:
@@ -87,6 +87,13 @@ class SensorController:
             )
             self.obstacles.append((round(x, 5), round(y, 5)))
         return self.obstacles
+
+    def print_distances(self) -> None:
+        left, front, right = self.get_left_front_right_distances()
+        print("\nRead sensors\n")
+        print("Distance Left: " + str(left))
+        print("Distance Front: " + str(front))
+        print("Distance Right: " + str(right) + "\n")
 
     def plot_obstacles(
         self, title: str = "", save_path: Optional[str] = "image.png"

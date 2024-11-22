@@ -393,6 +393,7 @@ class PatternMovementController:
         self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
     ) -> None:
         print("\nBefore backward movement:")
+        self.wheel_movement_controller.sensor_controller.print_distances()
         self.wheel_movement_controller.move_forward(-1.0, speed)
         print("\nAfter backward movement:")
         for _ in range(steps):
