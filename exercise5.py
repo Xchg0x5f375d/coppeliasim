@@ -5,13 +5,13 @@ from robot.robot import Robot
 def main():
     robot = Robot()
     print("\nInitial position:")
-    robot.position.print_position()
+    print(robot.position)
     pattern_movement_controller = PatternMovementController(
         robot.wheel_movement_controller
     )
     pattern_movement_controller.perform_360_scan()
     print("\nFinal position:")
-    robot.position.print_position()
+    print(robot.position)
 
 
 if __name__ == "__main__":

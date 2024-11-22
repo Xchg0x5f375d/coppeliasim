@@ -2,10 +2,7 @@ import math
 import time
 from typing import List, Optional, Tuple
 
-import matplotlib.pyplot as plt
-import numpy as np
-
-from constants import RobotConstants
+from models.position_types import ObstacleResult
 from robot.robot_position import RobotPosition
 from utils import vrep
 from utils.base_connection import BaseConnection
@@ -88,51 +85,35 @@ class SensorController:
             self.obstacles.append((round(x, 5), round(y, 5)))
         return self.obstacles
 
-    def print_distances(self) -> None:
-        left, front, right = self.get_left_front_right_distances()
-        print("\nRead sensors\n")
-        print("Distance Left: " + str(left))
-        print("Distance Front: " + str(front))
-        print("Distance Right: " + str(right) + "\n")
+    def find_closest_obstacle(self) -> ObstacleResult:
+        distances = [
+            math.sqrt(
+                (obstacle[0] - self.position.local_x) ** 2
+                + (obstacle[1] - self.position.local_y) ** 2
+            )
+            for obstacle in self.obstacles
+        ]
+        if not distances:
+            return (self.position.local_x, self.position.local_y), None
+        closest_idx = distances.index(min(distances))
+        closest_obstacle = self.obstacles[closest_idx]
+        return (self.position.local_x, self.position.local_y), closest_obstacle
 
-    def plot_obstacles(
-        self, title: str = "", save_path: Optional[str] = "image.png"
-    ) -> None:
-        x = [obs[0] for obs in self.obstacles]
-        y = [obs[1] for obs in self.obstacles]
-        plt.figure(figsize=(10, 10))
-        plt.plot(x, y, "ko", label="Obstacles", markersize=5)
-        plt.plot(
-            self.position.local_x,
-            self.position.local_y,
-            "r*",
-            label=RobotConstants.YOUBOT_NAME,
-            markersize=10,
+    def __str__(self) -> str:
+        left, front, right = self.get_left_front_right_distances()
+        return (
+            f"\nRead sensors\n"
+            f"Left Distance: {left:.3f}m\n"
+            f"Front Distance: {front:.3f}m\n"
+            f"Right Distance: {right:.3f}m\n"
+            f"Detected Obstacles: {len(self.obstacles)}"
         )
-        arrow_length = 0.3
-        plt.quiver(
-            self.position.local_x,
-            self.position.local_y,
-            arrow_length * np.cos(self.position.local_yaw),
-            arrow_length * np.sin(self.position.local_yaw),
-            color="red",
-            scale=1,
-            scale_units="xy",
-            angles="xy",
-            width=0.02,
-            alpha=0.8,
-            zorder=5,
+
+    def __repr__(self) -> str:
+        return (
+            f"SensorController("
+            f"position={self.position}, "
+            f"obstacles={self.obstacles}, "
+            f"hokuyo1_handle={self.hokuyo1_handle}, "
+            f"hokuyo2_handle={self.hokuyo2_handle})"
         )
-        plt.grid(True, linestyle="--", alpha=0.7)
-        plt.minorticks_on()
-        plt.grid(True, which="minor", linestyle=":", alpha=0.4)
-        plt.axis("equal")
-        plt.gca().invert_yaxis()
-        plt.title(title, pad=20, fontsize=12)
-        plt.xlabel("X Position (m)", labelpad=10)
-        plt.ylabel("Y Position (m)", labelpad=10)
-        plt.legend(loc="upper right", framealpha=0.9)
-        plt.tight_layout()
-        if save_path:
-            plt.savefig(f"docs/{save_path}")
-        plt.show()

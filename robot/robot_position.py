@@ -49,31 +49,33 @@ class RobotPosition:
         self.vrep_connection.get_ping_time()
         return base_pos, base_orient
 
-    def get_position(self) -> tuple[str, str]:
-        base_pos, base_orient = self.check_pose()
-        global_pos = (
-            f"global [PosX, PosY, AngZ]: "
-            f"{np.round(base_pos[1][0], 5)}, "
-            f"{np.round(base_pos[1][1], 5)}, "
-            f"{np.round(base_orient[1][2], 5)}"
-        )
-        local_pos = (
-            f"local [PosX, PosY, AngZ]: "
-            f"{np.round(self.local_x, 5)}, "
-            f"{np.round(self.local_y, 5)}, "
-            f"{np.round(self.local_yaw, 5)}"
-        )
-        return global_pos, local_pos
-
     def odometry(self, angle_deg: float, distance: float) -> None:
         self.local_yaw += math.radians(angle_deg)
         self.local_yaw = math.atan2(math.sin(self.local_yaw), math.cos(self.local_yaw))
         self.local_x += distance * math.cos(self.local_yaw)
         self.local_y += distance * math.sin(self.local_yaw)
 
-    def print_position(self) -> None:
-        global_pos, local_pos = self.get_position()
-        print(global_pos, local_pos, sep="\n")
+    def __str__(self) -> str:
+        base_pos, base_orient = self.check_pose()
+        return (
+            f"Global [PosX, PosY, AngZ]: "
+            f"{np.round(base_pos[1][0], 5)}, "
+            f"{np.round(base_pos[1][1], 5)}, "
+            f"{np.round(base_orient[1][2], 5)}\n"
+            f"Local [PosX, PosY, AngZ]: "
+            f"{np.round(self.local_x, 5)}, "
+            f"{np.round(self.local_y, 5)}, "
+            f"{np.round(self.local_yaw, 5)}"
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"RobotPosition("
+            f"vrep_connection={self.vrep_connection!r}, "
+            f"x={self.local_x}, "
+            f"y={self.local_y}, "
+            f"yaw={self.local_yaw})"
+        )
 
     def debug_movement(self, distance: float) -> None:
         print("\nDetailed Movement Analysis:")
