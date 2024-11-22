@@ -12,18 +12,14 @@ class RobotPosition:
     def __init__(
         self,
         vrep_connection: VREPConnection,
-        x: float = 0.0,
-        y: float = 0.0,
-        yaw: float = 0.0,
+        x: float = -4.700,
+        y: float = 0.200,
+        yaw: float = -1.57093,
     ):
         self.vrep_connection = vrep_connection
-        self.x = x
-        self.y = y
-        self.yaw = yaw
-
-        self.local_x = 0.0
-        self.local_y = 0.0
-        self.local_yaw = 0.0
+        self.local_x = x
+        self.local_y = y
+        self.local_yaw = yaw
 
     def set_position(
         self,
@@ -33,21 +29,16 @@ class RobotPosition:
             position = (float(position),) * 3
         elif len(position) != 3:
             raise ValueError("Position must be a tuple of 3 coordinates")
-        self.x, self.y, self.yaw = position
+        self.local_x, self.local_y, self.local_yaw = position
         self.vrep_connection.set_object_position(RobotConstants.YOUBOT_NAME, position)
 
     def to_position_tuple(self) -> tuple[float, float, float]:
-        return self.x, self.y, self.yaw
+        return self.local_x, self.local_y, self.local_yaw
 
     def check_pose(self) -> tuple[tuple[int, ndarray], tuple[int, ndarray]]:
         _, handle = self.vrep_connection.get_object_handle(RobotConstants.YOUBOT_NAME)
         base_pos = self.vrep_connection.get_object_position(handle)
         base_orient = self.vrep_connection.get_object_orientation(handle)
-        if base_pos[0] != -1:
-            self.x = np.round(base_pos[1][0], 5)
-            self.y = np.round(base_pos[1][1], 5)
-        if base_orient[0] != -1:
-            self.yaw = np.round(base_orient[1][2], 5)
         self.vrep_connection.get_ping_time()
         return base_pos, base_orient
 
@@ -68,11 +59,28 @@ class RobotPosition:
         return global_pos, local_pos
 
     def odometry(self, angle_deg: float, distance: float) -> None:
-        angle_rad = math.radians(angle_deg)
-        self.local_yaw += math.atan2(math.sin(angle_rad), math.cos(angle_rad))
+        self.local_yaw += math.radians(angle_deg)
+        self.local_yaw = math.atan2(math.sin(self.local_yaw), math.cos(self.local_yaw))
         self.local_x += distance * math.cos(self.local_yaw)
         self.local_y += distance * math.sin(self.local_yaw)
 
     def print_position(self) -> None:
         global_pos, local_pos = self.get_position()
         print(global_pos, local_pos, sep="\n")
+
+    def debug_movement(self, distance: float) -> None:
+        print("\nDetailed Movement Analysis:")
+        print("Current Position:")
+        print(f"(x={self.x:.4f}, y={self.y:.4f}, yaw={math.degrees(self.yaw):.4f}°)")
+        dx = distance * math.cos(self.yaw)
+        dy = distance * math.sin(self.yaw)
+        print("\nCalculated Movement:")
+        print(f"Distance: {distance}m at angle: {math.degrees(self.yaw):.4f}°")
+        print(f"Expected dx: {dx:.4f}m")
+        print(f"Expected dy: {dy:.4f}m")
+        print(f"Expected new position: ({self.x + dx:.4f}, {self.y + dy:.4f})")
+        base_pos, base_orient = self.check_pose()
+        print("\nSimulator Position:")
+        print(
+            f"x={base_pos[1][0]:.4f}, y={base_pos[1][1]:.4f}, yaw={math.degrees(base_orient[1][2]):.4f}°"
+        )

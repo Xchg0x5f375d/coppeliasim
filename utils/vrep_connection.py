@@ -141,7 +141,7 @@ class VREPConnection:
     def read_vision_sensor(
         self,
         sensor_handle: Optional[Tuple[int, int]],
-        operation_mode=vrep.simx_opmode_blocking,
+        operation_mode=vrep.simx_opmode_streaming,
     ) -> Tuple[int, bool, List[List[float]]]:
         if self.__client_id is None:
             return -1, False, []
