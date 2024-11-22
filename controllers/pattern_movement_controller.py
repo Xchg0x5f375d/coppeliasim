@@ -402,16 +402,18 @@ class PatternMovementController:
             self.wheel_movement_controller.sensor_controller.detect_obstacles()
             time.sleep(0.01)
         self.wheel_movement_controller.sensor_controller.plot_obstacles(
-            save_path="exercise5.png"
+            title="Exercise 5", save_path="exercise5.png"
         )
 
-    def move_with_obstacle_detection(self, distance: float, speed: float) -> None:
+    def move_with_obstacle_detection(
+        self, distance: float, speed: float, threshold: float = 0.5
+    ) -> None:
         moved_distance = 0
         step_size = 0.01
         while moved_distance < abs(distance):
             obstacles = (
                 self.wheel_movement_controller.sensor_controller.detect_obstacles(
-                    threshold=0.5
+                    threshold=threshold
                 )
             )
             if obstacles:
@@ -429,5 +431,5 @@ class PatternMovementController:
             self.wheel_movement_controller.move_forward(step, speed)
             moved_distance += step
         self.wheel_movement_controller.sensor_controller.plot_obstacles(
-            save_path="exercise5.png"
+            title="Exercise 5", save_path="exercise5.png"
         )

@@ -8,12 +8,12 @@ import numpy as np
 from constants import RobotConstants
 from robot.robot_position import RobotPosition
 from utils import vrep
-from utils.vrep_connection import VREPConnection
+from utils.base_connection import BaseConnection
 
 
 class SensorController:
     def __init__(
-        self, vrep_connection: VREPConnection, position: RobotPosition
+        self, vrep_connection: BaseConnection, position: RobotPosition
     ) -> None:
         self.vrep_connection = vrep_connection
         self.position = position
@@ -88,7 +88,9 @@ class SensorController:
             self.obstacles.append((round(x, 5), round(y, 5)))
         return self.obstacles
 
-    def plot_obstacles(self, save_path: Optional[str] = "image.png") -> None:
+    def plot_obstacles(
+        self, title: str = "", save_path: Optional[str] = "image.png"
+    ) -> None:
         x = [obs[0] for obs in self.obstacles]
         y = [obs[1] for obs in self.obstacles]
         plt.figure(figsize=(10, 10))
@@ -119,11 +121,11 @@ class SensorController:
         plt.grid(True, which="minor", linestyle=":", alpha=0.4)
         plt.axis("equal")
         plt.gca().invert_yaxis()
-        plt.title("Exercise 5", pad=20, fontsize=12)
+        plt.title(title, pad=20, fontsize=12)
         plt.xlabel("X Position (m)", labelpad=10)
         plt.ylabel("Y Position (m)", labelpad=10)
         plt.legend(loc="upper right", framealpha=0.9)
         plt.tight_layout()
         if save_path:
-            plt.savefig(f"plots/{save_path}")
+            plt.savefig(f"docs/{save_path}")
         plt.show()

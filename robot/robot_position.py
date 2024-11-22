@@ -5,13 +5,13 @@ import numpy as np
 from numpy import ndarray
 
 from constants.robot_constants import RobotConstants
-from utils.vrep_connection import VREPConnection
+from utils.base_connection import BaseConnection
 
 
 class RobotPosition:
     def __init__(
         self,
-        vrep_connection: VREPConnection,
+        vrep_connection: BaseConnection,
         x: float = -4.700,
         y: float = 0.200,
         yaw: float = -1.57093,

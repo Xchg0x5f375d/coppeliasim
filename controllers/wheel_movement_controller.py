@@ -10,13 +10,13 @@ from models.movement_dynamics import MovementDynamics
 from models.path_types import PathType
 from models.wheel_velocities import WheelVelocities
 from robot.robot_position import RobotPosition
-from utils.vrep_connection import VREPConnection
+from utils.base_connection import BaseConnection
 
 
 class WheelMovementController:
     def __init__(
         self,
-        vrep_connection: VREPConnection,
+        vrep_connection: BaseConnection,
         position: RobotPosition,
         wheel_joints: np.ndarray,
         sensor_controller: SensorController,
