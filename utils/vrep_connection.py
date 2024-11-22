@@ -2,10 +2,10 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 
-from utils import vrep
+from utils import BaseConnection, vrep
 
 
-class VREPConnection:
+class VREPConnection(BaseConnection):
     def __init__(self, address: str = "127.0.0.1", port: int = 19997) -> None:
         self.__address = address
         self.__port = port
