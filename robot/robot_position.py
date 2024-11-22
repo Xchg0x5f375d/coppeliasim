@@ -20,6 +20,13 @@ class RobotPosition:
         self.local_x = x
         self.local_y = y
         self.local_yaw = yaw
+        self.__initialize_positions()
+
+    def __initialize_positions(self) -> None:
+        base_pos, base_orient = self.check_pose()
+        self.local_x = base_pos[1][0]
+        self.local_y = base_pos[1][1]
+        self.local_yaw = base_orient[1][2]
 
     def set_position(
         self,
@@ -43,12 +50,12 @@ class RobotPosition:
         return base_pos, base_orient
 
     def get_position(self) -> tuple[str, str]:
-        pos, orient = self.check_pose()
+        base_pos, base_orient = self.check_pose()
         global_pos = (
             f"global [PosX, PosY, AngZ]: "
-            f"{np.round(pos[1][0], 5)}, "
-            f"{np.round(pos[1][1], 5)}, "
-            f"{np.round(orient[1][2], 5)}"
+            f"{np.round(base_pos[1][0], 5)}, "
+            f"{np.round(base_pos[1][1], 5)}, "
+            f"{np.round(base_orient[1][2], 5)}"
         )
         local_pos = (
             f"local [PosX, PosY, AngZ]: "
