@@ -71,14 +71,18 @@ class RobotPosition:
     def debug_movement(self, distance: float) -> None:
         print("\nDetailed Movement Analysis:")
         print("Current Position:")
-        print(f"(x={self.x:.4f}, y={self.y:.4f}, yaw={math.degrees(self.yaw):.4f}°)")
-        dx = distance * math.cos(self.yaw)
-        dy = distance * math.sin(self.yaw)
+        print(
+            f"(x={self.local_x:.4f}, y={self.local_y:.4f}, yaw={math.degrees(self.local_yaw):.4f}°)"
+        )
+        dx = distance * math.cos(self.local_yaw)
+        dy = distance * math.sin(self.local_yaw)
         print("\nCalculated Movement:")
-        print(f"Distance: {distance}m at angle: {math.degrees(self.yaw):.4f}°")
+        print(f"Distance: {distance}m at angle: {math.degrees(self.local_yaw):.4f}°")
         print(f"Expected dx: {dx:.4f}m")
         print(f"Expected dy: {dy:.4f}m")
-        print(f"Expected new position: ({self.x + dx:.4f}, {self.y + dy:.4f})")
+        print(
+            f"Expected new position: ({self.local_x + dx:.4f}, {self.local_y + dy:.4f})"
+        )
         base_pos, base_orient = self.check_pose()
         print("\nSimulator Position:")
         print(
