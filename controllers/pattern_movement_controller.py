@@ -1,6 +1,6 @@
 import math
 import time
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict
 
 from controllers.wheel_movement_controller import (
     MovementDynamics,
@@ -392,14 +392,15 @@ class PatternMovementController:
     def perform_360_scan(
         self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
     ) -> None:
-        obstacles: List[Tuple[float, float]] = []
+        print("\nBefore backward movement:")
         self.wheel_movement_controller.move_forward(-1.0, speed)
-        self.wheel_movement_controller.sensor_controller.print_distances()
+        print("\nAfter backward movement:")
         for _ in range(steps):
-            self.wheel_movement_controller.turn_right(angle_per_step, speed)
-            obstacles.extend(
-                self.wheel_movement_controller.sensor_controller.detect_obstacles()
+            self.wheel_movement_controller.turn_right(
+                degree=angle_per_step, speed=speed
             )
-            self.wheel_movement_controller.sensor_controller.print_distances()
-            time.sleep(0.05)
-        self.wheel_movement_controller.sensor_controller.visualize_obstacles(obstacles)
+            self.wheel_movement_controller.sensor_controller.detect_obstacles()
+            time.sleep(0.01)
+        self.wheel_movement_controller.sensor_controller.plot_obstacles(
+            save_path="exercise5.png"
+        )
