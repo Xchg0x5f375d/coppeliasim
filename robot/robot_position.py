@@ -5,6 +5,7 @@ import numpy as np
 from numpy import ndarray
 
 from constants.robot_constants import RobotConstants
+from models.point2dwithorientation import Point2DWithOrientation
 from utils.base_connection import BaseConnection
 
 
@@ -44,6 +45,9 @@ class RobotPosition:
 
     def to_position_tuple_2d(self) -> tuple[float, float]:
         return self.local_x, self.local_y
+
+    def to_point2d_with_orientation(self) -> Point2DWithOrientation:
+        return Point2DWithOrientation(self.local_x, self.local_y, self.local_yaw)
 
     def check_pose(self) -> tuple[tuple[int, ndarray], tuple[int, ndarray]]:
         _, handle = self.vrep_connection.get_object_handle(RobotConstants.YOUBOT_NAME)

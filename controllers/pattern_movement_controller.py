@@ -406,7 +406,7 @@ class PatternMovementController:
             )
             self.wheel_movement_controller.sensor_controller.detect_obstacles()
         ObstaclePlotter.plot_obstacles(
-            self.wheel_movement_controller.position.to_position_tuple(),
+            self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
             title="Exercise 5",
             save_path="exercise5.png",
@@ -438,7 +438,7 @@ class PatternMovementController:
             step = min(step_size, abs(distance) - moved_distance)
             self.wheel_movement_controller.move_forward(step, speed)
             moved_distance += step
-        position = self.wheel_movement_controller.position.to_position_tuple()
+        position = self.wheel_movement_controller.position.to_point2d_with_orientation()
         closest_obstacle = (
             self.wheel_movement_controller.sensor_controller.find_closest_obstacle()
         )

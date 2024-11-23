@@ -5,6 +5,7 @@ import numpy as np
 
 from constants import RobotConstants
 from models.obstacle_info import ObstacleInfo
+from models.point2dwithorientation import Point2DWithOrientation
 
 
 class ObstaclePlotter:
@@ -21,46 +22,39 @@ class ObstaclePlotter:
         plt.legend(loc="upper right", framealpha=0.9)
 
     @staticmethod
-    def __plot_robot_orientation(position: Tuple[float, float, float]) -> None:
-        arrow_length = 0.1
-        plt.quiver(
-            position[0],
-            position[1],
-            arrow_length * np.cos(position[2]),
-            arrow_length * np.sin(position[2]),
-            color="r",
-            scale=10.0,
-            scale_units="xy",
-            angles="xy",
-            width=0.005,
-            headwidth=2,
-            headlength=3,
-            headaxislength=2,
-            zorder=5,
-        )
-
-    @staticmethod
     def plot_obstacles(
-        position: Tuple[float, float, float],
+        position: Point2DWithOrientation,
         obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
         title: str = "",
         save_path: Optional[str] = "image.png",
         callbacks: Optional[List[Union[Callable[[plt.Axes], None], Callable]]] = None,
     ) -> None:
         obstacle_list = [obstacles] if isinstance(obstacles, tuple) else obstacles
-        x = [obs[0] for obs in obstacle_list]
-        y = [obs[1] for obs in obstacle_list]
+        x = [obstacle[0] for obstacle in obstacle_list]
+        y = [obstacle[1] for obstacle in obstacle_list]
         plt.figure(figsize=(10, 10))
         ax = plt.gca()
         plt.plot(x, y, "ko", label="Obstacles", markersize=5)
         plt.plot(
-            position[0],
-            position[1],
+            position.x,
+            position.y,
             "r*",
             label=RobotConstants.YOUBOT_NAME,
             markersize=10,
         )
-        ObstaclePlotter.__plot_robot_orientation(position)
+        arrow_length = 0.3
+        plt.arrow(
+            position.x,
+            position.y,
+            arrow_length * np.cos(position.yaw),
+            arrow_length * np.sin(position.yaw),
+            head_width=0.1,
+            head_length=0.15,
+            fc="r",
+            ec="r",
+            length_includes_head=True,
+            zorder=10,
+        )
         ObstaclePlotter.__setup_plot_formatting(title)
         if callbacks:
             for callback in callbacks:
@@ -72,11 +66,11 @@ class ObstaclePlotter:
 
     @staticmethod
     def plot_ray_trace(
-        position: Tuple[float, float, float], target_obstacle: ObstacleInfo
+        position: Point2DWithOrientation, target_obstacle: ObstacleInfo
     ) -> None:
         plt.plot(
-            [position[0], target_obstacle.closest_obstacle[0]],
-            [position[1], target_obstacle.closest_obstacle[1]],
+            [position.x, target_obstacle.closest_obstacle[0]],
+            [position.y, target_obstacle.closest_obstacle[1]],
             "r--",
             alpha=0.7,
         )
