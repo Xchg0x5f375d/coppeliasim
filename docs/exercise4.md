@@ -6,6 +6,7 @@ This exercise implements position tracking and odometry calculations for the You
 monitoring of the robot's position and orientation during movement.
 
 ![Exercise 4 Demo](/docs/assets/exercise4.gif)
+![Exercise 4 Demo](/docs/assets/exercise4.png)
 
 ## Key Features
 

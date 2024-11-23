@@ -12,15 +12,7 @@ def main():
     pattern_movement_controller.perform_360_scan()
     print("\nFinal position:")
     print(robot.position)
-
-    print("\nInitial position:")
-    print(robot.position)
-    pattern_movement_controller = PatternMovementController(
-        robot.wheel_movement_controller
-    )
     pattern_movement_controller.move_with_obstacle_detection(5.0, 5.0)
-    print("\nFinal position:")
-    print(robot.position)
 
 
 if __name__ == "__main__":
