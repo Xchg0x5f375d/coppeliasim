@@ -8,13 +8,14 @@ maintained in a separate file for better organization and clarity.
 - `exercise2.py` - Basic robot movement and control
 - `exercise3.py` - Robot trajectories and movement dynamics
 - `exercise4.py` - Odometry of the mobile robots
+- `exercise5.py` - Obstacle detection with Hokuyo sensor laser beams
 
 ## Prerequisites
 
 - Python 3.x
 - CoppeliaSim EDU/PRO V4.x
 - Required Python packages:
-  `numpy`
+  `numpy matplotlib`
 
 ## Getting Started
 
