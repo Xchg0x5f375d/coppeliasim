@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 
@@ -68,18 +68,4 @@ class BaseConnection(ABC):
     def set_joint_target_position(
         self, joint_handle: int, angle: float, operation_mode: Optional[int] = None
     ) -> None:
-        pass
-
-    @abstractmethod
-    def set_integer_signal(
-        self, signal: Tuple[str, int], operation_mode: Optional[int] = None
-    ) -> int:
-        pass
-
-    @abstractmethod
-    def read_vision_sensor(
-        self,
-        sensor_handle: Optional[Tuple[int, int]],
-        operation_mode: Optional[int] = None,
-    ) -> Tuple[int, bool, List[List[float]]]:
         pass

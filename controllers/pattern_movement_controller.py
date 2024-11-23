@@ -6,7 +6,6 @@ from controllers.wheel_movement_controller import (
     MovementDynamics,
     WheelMovementController,
 )
-from utils.obstacle_plotter import ObstaclePlotter
 
 
 class PatternMovementController:
@@ -388,64 +387,4 @@ class PatternMovementController:
         print("\nZigzag pattern completed!")
         print(
             f"Completed {num_zigzags} zigzags over {length:.2f} meters with {width:.2f} meter width"
-        )
-
-    def perform_360_scan(
-        self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
-    ) -> None:
-        print("\nBefore backward movement:")
-        print(self.wheel_movement_controller.sensor_controller)
-        self.wheel_movement_controller.move_forward(-1.0, speed)
-        print("\nAfter backward movement:")
-        print(self.wheel_movement_controller.sensor_controller)
-        for _ in range(steps):
-            self.wheel_movement_controller.turn_right(
-                degree=angle_per_step, speed=speed
-            )
-            self.wheel_movement_controller.sensor_controller.detect_obstacles()
-            time.sleep(0.01)
-        ObstaclePlotter.plot_obstacles(
-            self.wheel_movement_controller.position.to_position_tuple_2d(),
-            self.wheel_movement_controller.sensor_controller.obstacles,
-            title="Exercise 5",
-            save_path="exercise5.png",
-        )
-
-    def move_with_obstacle_detection(
-        self, distance: float, speed: float, threshold: float = 0.5
-    ) -> None:
-        moved_distance = 0
-        step_size = 0.05
-        while moved_distance < abs(distance):
-            obstacles = (
-                self.wheel_movement_controller.sensor_controller.detect_obstacles(
-                    threshold=threshold
-                )
-            )
-            if obstacles:
-                latest_obstacle = obstacles[-1]
-                dx = (
-                    latest_obstacle[0] - self.wheel_movement_controller.position.local_x
-                )
-                dy = (
-                    latest_obstacle[1] - self.wheel_movement_controller.position.local_y
-                )
-                obstacle_distance = math.sqrt(dx**2 + dy**2)
-                print(f"Obstacle detected at {obstacle_distance}m! Stopping...")
-                break
-            step = min(step_size, abs(distance) - moved_distance)
-            self.wheel_movement_controller.move_forward(step, speed)
-            moved_distance += step
-        position = self.wheel_movement_controller.position.to_position_tuple_2d()
-        closest_obstacle = (
-            self.wheel_movement_controller.sensor_controller.find_closest_obstacle()
-        )
-        ObstaclePlotter.plot_obstacles(
-            position,
-            self.wheel_movement_controller.sensor_controller.obstacles,
-            title="Exercise 5 Extra",
-            save_path="exercise5_extra.png",
-            callbacks=[
-                lambda ax: ObstaclePlotter.plot_ray_trace(position, closest_obstacle)
-            ],
         )

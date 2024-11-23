@@ -5,7 +5,6 @@ from typing import Callable, Optional, Union
 import numpy as np
 
 from constants.robot_constants import RobotConstants
-from controllers.sensor_controller import SensorController
 from models.movement_dynamics import MovementDynamics
 from models.path_types import PathType
 from models.wheel_velocities import WheelVelocities
@@ -19,12 +18,10 @@ class WheelMovementController:
         vrep_connection: BaseConnection,
         position: RobotPosition,
         wheel_joints: np.ndarray,
-        sensor_controller: SensorController,
     ):
         self.vrep_connection = vrep_connection
         self.position = position
         self.wheel_joints = wheel_joints
-        self.sensor_controller = sensor_controller
 
     @staticmethod
     def __calculate_movement_time(distance: float, speed: float) -> float:
