@@ -5,7 +5,7 @@
 This exercise introduces fundamental robot movement and control operations using the YouBot platform in CoppeliaSim. It
 demonstrates basic movement patterns and arm manipulation capabilities.
 
-![Exercise 2 Demo](assets/exercise2.gif)
+![Exercise 2 Demo](/docs/assets/exercise2.gif)
 
 ## Key Features
 

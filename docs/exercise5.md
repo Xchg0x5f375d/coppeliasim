@@ -5,7 +5,7 @@
 This exercise implements obstacle detection capabilities using the Hokuyo sensor laser beams, enabling the YouBot to
 detect and respond to obstacles in its environment while performing movement patterns.
 
-![Exercise 5 Demo](assets/exercise5.gif)
+![Exercise 5 Demo](/docs/assets/exercise5.gif)
 
 ## Key Features
 
@@ -83,9 +83,7 @@ detect and respond to obstacles in its environment while performing movement pat
 
 ### Generated Plots
 
-- Exercise5.png: Complete 360° scan results
-- Exercise5_obstacle_detection.png: Specific obstacle detection results
-- Ray tracing visualization for closest obstacle
+- exercise5.png: Complete 360° scan results
 
 ### Example Plot
 

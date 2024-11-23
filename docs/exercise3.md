@@ -5,7 +5,7 @@
 This exercise implements advanced movement patterns and dynamics for the YouBot platform, featuring various geometric
 trajectories and velocity control mechanisms.
 
-![Exercise 3 Demo](assets/exercise3.gif)
+![Exercise 3 Demo](/docs/assets/exercise3.gif)
 
 ## Key Features
 

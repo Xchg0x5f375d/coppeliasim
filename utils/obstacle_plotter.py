@@ -25,6 +25,30 @@ class ObstaclePlotter:
         self.ax.set_ylabel("Y Position (m)", labelpad=10)
         self.ax.legend(loc="upper right", framealpha=0.9)
 
+    def __draw_orientation_arrow(
+        self, position: Point2DWithOrientation, plot_size: float, plot_width: float
+    ) -> None:
+        marker_size = 10
+        points_to_pixels = self.fig.dpi / 72
+        marker_radius = (
+            (marker_size * points_to_pixels) / self.fig.dpi * plot_size * 0.05
+        )
+        start_x = position.x + marker_radius * np.cos(position.yaw)
+        start_y = position.y + marker_radius * np.sin(position.yaw)
+        arrow_length = plot_size * 0.08
+        self.ax.arrow(
+            start_x,
+            start_y,
+            arrow_length * np.cos(position.yaw),
+            arrow_length * np.sin(position.yaw),
+            head_width=plot_width * 0.04,
+            head_length=plot_size * 0.06,
+            fc="r",
+            ec="r",
+            length_includes_head=True,
+            zorder=10,
+        )
+
     def plot_obstacles(
         self,
         position: Point2DWithOrientation,
@@ -51,7 +75,7 @@ class ObstaclePlotter:
         plot_width = x_max - x_min
         plot_height = y_max - y_min
         plot_size = min(plot_width, plot_height)
-        self._draw_orientation_arrow(position, plot_size, plot_width)
+        self.__draw_orientation_arrow(position, plot_size, plot_width)
         self.__setup_plot_formatting(title)
         if callbacks:
             for callback in callbacks:
@@ -60,30 +84,6 @@ class ObstaclePlotter:
         if save_path:
             self.fig.savefig(f"plots/{save_path}")
         plt.show()
-
-    def _draw_orientation_arrow(
-        self, position: Point2DWithOrientation, plot_size: float, plot_width: float
-    ) -> None:
-        marker_size = 10
-        points_to_pixels = self.fig.dpi / 72
-        marker_radius = (
-            (marker_size * points_to_pixels) / self.fig.dpi * plot_size * 0.05
-        )
-        start_x = position.x + marker_radius * np.cos(position.yaw)
-        start_y = position.y + marker_radius * np.sin(position.yaw)
-        arrow_length = plot_size * 0.08
-        self.ax.arrow(
-            start_x,
-            start_y,
-            arrow_length * np.cos(position.yaw),
-            arrow_length * np.sin(position.yaw),
-            head_width=plot_width * 0.04,
-            head_length=plot_size * 0.06,
-            fc="r",
-            ec="r",
-            length_includes_head=True,
-            zorder=10,
-        )
 
     def plot_ray_trace(
         self, position: Point2DWithOrientation, target_obstacle: ObstacleInfo

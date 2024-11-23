@@ -5,7 +5,7 @@
 This exercise implements position tracking and odometry calculations for the YouBot platform, enabling accurate
 monitoring of the robot's position and orientation during movement.
 
-![Exercise 4 Demo](assets/exercise4.gif)
+![Exercise 4 Demo](/docs/assets/exercise4.gif)
 
 ## Key Features
 
