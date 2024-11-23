@@ -393,6 +393,8 @@ class PatternMovementController:
     def perform_360_scan(
         self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
     ) -> None:
+        self.wheel_movement_controller.sensor_controller.read_sensors_streaming()
+        time.sleep(0.1)
         print("\nBefore backward movement:")
         print(self.wheel_movement_controller.sensor_controller)
         self.wheel_movement_controller.move_forward(-1.0, speed)
@@ -403,9 +405,8 @@ class PatternMovementController:
                 degree=angle_per_step, speed=speed
             )
             self.wheel_movement_controller.sensor_controller.detect_obstacles()
-            time.sleep(0.01)
         ObstaclePlotter.plot_obstacles(
-            self.wheel_movement_controller.position.to_position_tuple_2d(),
+            self.wheel_movement_controller.position.to_position_tuple(),
             self.wheel_movement_controller.sensor_controller.obstacles,
             title="Exercise 5",
             save_path="exercise5.png",
@@ -422,6 +423,7 @@ class PatternMovementController:
                     threshold=threshold
                 )
             )
+            print(self.wheel_movement_controller.sensor_controller)
             if obstacles:
                 latest_obstacle = obstacles[-1]
                 dx = (
@@ -436,16 +438,16 @@ class PatternMovementController:
             step = min(step_size, abs(distance) - moved_distance)
             self.wheel_movement_controller.move_forward(step, speed)
             moved_distance += step
-        position = self.wheel_movement_controller.position.to_position_tuple_2d()
+        position = self.wheel_movement_controller.position.to_position_tuple()
         closest_obstacle = (
             self.wheel_movement_controller.sensor_controller.find_closest_obstacle()
         )
         ObstaclePlotter.plot_obstacles(
             position,
             self.wheel_movement_controller.sensor_controller.obstacles,
-            title="Exercise 5 Extra",
-            save_path="exercise5_extra.png",
+            title="Exercise 5 Obstacle Detection",
+            save_path="exercise5_obstacle_detection.png",
             callbacks=[
-                lambda ax: ObstaclePlotter.plot_ray_trace(position, closest_obstacle)
+                lambda _: ObstaclePlotter.plot_ray_trace(position, closest_obstacle)
             ],
         )

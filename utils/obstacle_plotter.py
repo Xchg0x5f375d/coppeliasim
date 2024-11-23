@@ -21,7 +21,7 @@ class ObstaclePlotter:
         plt.legend(loc="upper right", framealpha=0.9)
 
     @staticmethod
-    def __plot_robot_orientation(position: Tuple[float, float]) -> None:
+    def __plot_robot_orientation(position: Tuple[float, float, float]) -> None:
         arrow_length = 0.1
         plt.quiver(
             position[0],
@@ -41,7 +41,7 @@ class ObstaclePlotter:
 
     @staticmethod
     def plot_obstacles(
-        position: Tuple[float, float],
+        position: Tuple[float, float, float],
         obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
         title: str = "",
         save_path: Optional[str] = "image.png",
@@ -67,12 +67,12 @@ class ObstaclePlotter:
                 callback(ax)
         plt.tight_layout()
         if save_path:
-            plt.savefig(f"docs/{save_path}")
+            plt.savefig(f"plots/{save_path}")
         plt.show()
 
     @staticmethod
     def plot_ray_trace(
-        position: Tuple[float, float], target_obstacle: ObstacleInfo
+        position: Tuple[float, float, float], target_obstacle: ObstacleInfo
     ) -> None:
         plt.plot(
             [position[0], target_obstacle.closest_obstacle[0]],

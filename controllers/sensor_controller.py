@@ -13,18 +13,13 @@ class SensorController:
         self,
         vrep_connection: BaseConnection,
         position: RobotPosition,
-        use_sensors: bool = False,
-        enable_obstacle_detection: bool = False,
     ) -> None:
         self.vrep_connection = vrep_connection
         self.position = position
         self.obstacles: List[Tuple[float, float]] = []
         self.hokuyo1_handle: Optional[Tuple[int, int]] = None
         self.hokuyo2_handle: Optional[Tuple[int, int]] = None
-        self.__use_sensors = use_sensors
-        self.__enable_obstacle_detection = enable_obstacle_detection
-        if self.__use_sensors:
-            self.__initialize_sensors()
+        self.__initialize_sensors()
 
     def __initialize_sensors(self) -> None:
         self.vrep_connection.set_integer_signal(("handle_xy_sensor", 2))
@@ -35,15 +30,15 @@ class SensorController:
         _, self.hokuyo2_handle = self.vrep_connection.get_object_handle(
             "fastHokuyo_sensor2"
         )
-        self.__read_sensors_streaming()
-        self.__read_sensors_buffer()
-        self.__read_sensors_blocking()
+        self.read_sensors_streaming()
+        self.read_sensors_buffer()
+        self.read_sensors_blocking()
 
     @staticmethod
     def __get_distance(aux_data: List, n: int) -> float:
         return aux_data[1][4 * n + 5]
 
-    def __read_sensors_streaming(self) -> Tuple[List[List[float]], List[List[float]]]:
+    def read_sensors_streaming(self) -> Tuple[List[List[float]], List[List[float]]]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(
             self.hokuyo1_handle, operation_mode=vrep.simx_opmode_streaming
         )
@@ -52,7 +47,7 @@ class SensorController:
         )
         return aux_data1, aux_data2
 
-    def __read_sensors_buffer(self) -> Tuple[List[List[float]], List[List[float]]]:
+    def read_sensors_buffer(self) -> Tuple[List[List[float]], List[List[float]]]:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(
             self.hokuyo1_handle, operation_mode=vrep.simx_opmode_buffer
         )
@@ -61,13 +56,12 @@ class SensorController:
         )
         return aux_data1, aux_data2
 
-    def __read_sensors_blocking(self) -> None:
-        self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
-        self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
+    def read_sensors_blocking(self) -> Tuple[List[List[float]], List[List[float]]]:
+        _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
+        _, _, aux_data2 = self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
+        return aux_data1, aux_data2
 
     def get_left_front_right_distances(self) -> Tuple[float, float, float]:
-        if not self.__use_sensors:
-            return 0.0, 0.0, 0.0
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
         _, _, aux_data2 = self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
         last_index = int(len(aux_data1[1]) / 4) - 1
@@ -77,11 +71,9 @@ class SensorController:
         return left_distance, front_distance, right_distance
 
     def detect_obstacles(self, threshold=5.0) -> List[Tuple[float, float]]:
-        if not self.__enable_obstacle_detection:
-            return []
-        self.__read_sensors_streaming()
+        self.read_sensors_streaming()
         time.sleep(0.01)
-        aux_data1, _ = self.__read_sensors_buffer()
+        aux_data1, _ = self.read_sensors_buffer()
         if not aux_data1 or not aux_data1[1]:
             return []
         last_index = int(len(aux_data1[1]) / 4) - 1
