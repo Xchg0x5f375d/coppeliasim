@@ -400,12 +400,13 @@ class PatternMovementController:
         self.wheel_movement_controller.move_forward(-1.0, speed)
         print("\nAfter backward movement:")
         print(self.wheel_movement_controller.sensor_controller)
+        plotter = ObstaclePlotter()
         for _ in range(steps):
             self.wheel_movement_controller.turn_right(
                 degree=angle_per_step, speed=speed
             )
             self.wheel_movement_controller.sensor_controller.detect_obstacles()
-        ObstaclePlotter.plot_obstacles(
+        plotter.plot_obstacles(
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
             title="Exercise 5",
@@ -423,7 +424,6 @@ class PatternMovementController:
                     threshold=threshold
                 )
             )
-            print(self.wheel_movement_controller.sensor_controller)
             if obstacles:
                 latest_obstacle = obstacles[-1]
                 dx = (

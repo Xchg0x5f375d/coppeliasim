@@ -5,7 +5,7 @@ import numpy as np
 from numpy import ndarray
 
 from constants.robot_constants import RobotConstants
-from models.point2dwithorientation import Point2DWithOrientation
+from models.point2d_with_orientation import Point2DWithOrientation
 from utils.base_connection import BaseConnection
 
 
