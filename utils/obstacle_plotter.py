@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Callable, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
@@ -29,7 +30,7 @@ class ObstaclePlotter:
         position: Point2DWithOrientation,
         obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
         title: str = "",
-        save_path: Optional[str] = "image.png",
+        save_path: Optional[str] = f"{datetime.now().isoformat()}.png",
         callbacks: Optional[List[Union[Callable[[plt.Axes], None], Callable]]] = None,
     ) -> None:
         self.fig = plt.figure(figsize=(10, 10))
@@ -63,14 +64,21 @@ class ObstaclePlotter:
     def _draw_orientation_arrow(
         self, position: Point2DWithOrientation, plot_size: float, plot_width: float
     ) -> None:
-        arrow_length = plot_size * 0.12
+        marker_size = 10
+        points_to_pixels = self.fig.dpi / 72
+        marker_radius = (
+            (marker_size * points_to_pixels) / self.fig.dpi * plot_size * 0.05
+        )
+        start_x = position.x + marker_radius * np.cos(position.yaw)
+        start_y = position.y + marker_radius * np.sin(position.yaw)
+        arrow_length = plot_size * 0.08
         self.ax.arrow(
-            position.x,
-            position.y,
+            start_x,
+            start_y,
             arrow_length * np.cos(position.yaw),
             arrow_length * np.sin(position.yaw),
-            head_width=plot_width * 0.08,
-            head_length=plot_size * 0.12,
+            head_width=plot_width * 0.04,
+            head_length=plot_size * 0.06,
             fc="r",
             ec="r",
             length_includes_head=True,

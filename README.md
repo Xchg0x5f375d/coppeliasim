@@ -64,7 +64,6 @@ coppeliasim/
 ├── plots/
 │   └── exercise5/
 │       ├── exercise5.png
-│       └── exercise5_obstacle_detection.png
 ├── robot/
 │   ├── __init__.py
 │   ├── robot.py
@@ -83,7 +82,6 @@ coppeliasim/
 ├── exercise3.py
 ├── exercise4.py
 ├── exercise5.py
-├── exercise5_obstacle_detection.py
 ├── README.md
 ├── requirements.txxt
 └── .gitignore
