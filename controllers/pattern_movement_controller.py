@@ -446,9 +446,5 @@ class PatternMovementController:
         plotter.plot_obstacles(
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
-            callbacks=[
-                lambda ax: ObstaclePlotter.plot_ray_trace(
-                    ax, position, closest_obstacle
-                )
-            ],
+            callbacks=[lambda: plotter.plot_ray_trace(position, closest_obstacle)],
         )
