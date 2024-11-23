@@ -1,13 +1,6 @@
 from .movement_dynamics import MovementDynamics
+from .obstacle_info import ObstacleInfo
 from .path_types import PathType
-from .position_types import Obstacle, ObstacleResult, Position
 from .wheel_velocities import WheelVelocities
 
-__all__ = [
-    "WheelVelocities",
-    "MovementDynamics",
-    "PathType",
-    "Position",
-    "Obstacle",
-    "ObstacleResult",
-]
+__all__ = ["WheelVelocities", "MovementDynamics", "PathType", "ObstacleInfo"]

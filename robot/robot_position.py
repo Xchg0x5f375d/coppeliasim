@@ -42,6 +42,9 @@ class RobotPosition:
     def to_position_tuple(self) -> tuple[float, float, float]:
         return self.local_x, self.local_y, self.local_yaw
 
+    def to_position_tuple_2d(self) -> tuple[float, float]:
+        return self.local_x, self.local_y
+
     def check_pose(self) -> tuple[tuple[int, ndarray], tuple[int, ndarray]]:
         _, handle = self.vrep_connection.get_object_handle(RobotConstants.YOUBOT_NAME)
         base_pos = self.vrep_connection.get_object_position(handle)

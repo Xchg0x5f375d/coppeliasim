@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from constants import RobotConstants
+from models.obstacle_info import ObstacleInfo
 
 
 class ObstaclePlotter:
     @staticmethod
-    def _setup_plot_formatting(title: str) -> None:
+    def __setup_plot_formatting(title: str) -> None:
         plt.grid(True, linestyle="--", alpha=0.7)
         plt.minorticks_on()
         plt.grid(True, which="minor", linestyle=":", alpha=0.4)
@@ -20,7 +21,7 @@ class ObstaclePlotter:
         plt.legend(loc="upper right", framealpha=0.9)
 
     @staticmethod
-    def _plot_robot_orientation(position: Tuple[float, float]) -> None:
+    def __plot_robot_orientation(position: Tuple[float, float]) -> None:
         arrow_length = 0.1
         plt.quiver(
             position[0],
@@ -40,14 +41,15 @@ class ObstaclePlotter:
 
     @staticmethod
     def plot_obstacles(
-            position: Tuple[float, float],
-            obstacles: List[Tuple[float, float]],
-            title: str = "",
-            save_path: Optional[str] = "image.png",
-            callbacks: Optional[List[Union[Callable[[plt.Axes], None], Callable]]] = None,
+        position: Tuple[float, float],
+        obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
+        title: str = "",
+        save_path: Optional[str] = "image.png",
+        callbacks: Optional[List[Union[Callable[[plt.Axes], None], Callable]]] = None,
     ) -> None:
-        x = [obs[0] for obs in obstacles]
-        y = [obs[1] for obs in obstacles]
+        obstacle_list = [obstacles] if isinstance(obstacles, tuple) else obstacles
+        x = [obs[0] for obs in obstacle_list]
+        y = [obs[1] for obs in obstacle_list]
         plt.figure(figsize=(10, 10))
         ax = plt.gca()
         plt.plot(x, y, "ko", label="Obstacles", markersize=5)
@@ -58,8 +60,8 @@ class ObstaclePlotter:
             label=RobotConstants.YOUBOT_NAME,
             markersize=10,
         )
-        ObstaclePlotter._plot_robot_orientation(position)
-        ObstaclePlotter._setup_plot_formatting(title)
+        ObstaclePlotter.__plot_robot_orientation(position)
+        ObstaclePlotter.__setup_plot_formatting(title)
         if callbacks:
             for callback in callbacks:
                 callback(ax)
@@ -70,11 +72,11 @@ class ObstaclePlotter:
 
     @staticmethod
     def plot_ray_trace(
-            position: Tuple[float, float], target_obstacle: Tuple[float, float]
+        position: Tuple[float, float], target_obstacle: ObstacleInfo
     ) -> None:
         plt.plot(
-            [position[0], target_obstacle[0]],
-            [position[1], target_obstacle[1]],
+            [position[0], target_obstacle.closest_obstacle[0]],
+            [position[1], target_obstacle.closest_obstacle[1]],
             "r--",
             alpha=0.7,
         )

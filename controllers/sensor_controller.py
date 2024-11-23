@@ -2,7 +2,7 @@ import math
 import time
 from typing import List, Optional, Tuple
 
-from models.position_types import ObstacleResult
+from models.obstacle_info import ObstacleInfo
 from robot.robot_position import RobotPosition
 from utils import vrep
 from utils.base_connection import BaseConnection
@@ -96,7 +96,7 @@ class SensorController:
             self.obstacles.append((round(x, 5), round(y, 5)))
         return self.obstacles
 
-    def find_closest_obstacle(self) -> ObstacleResult:
+    def find_closest_obstacle(self) -> ObstacleInfo:
         distances = [
             math.sqrt(
                 (obstacle[0] - self.position.local_x) ** 2
@@ -104,11 +104,13 @@ class SensorController:
             )
             for obstacle in self.obstacles
         ]
+        current_pos = (self.position.local_x, self.position.local_y)
         if not distances:
-            return (self.position.local_x, self.position.local_y), None
-        closest_idx = distances.index(min(distances))
+            return ObstacleInfo(current_pos, None, float("inf"))
+        min_distance = min(distances)
+        closest_idx = distances.index(min_distance)
         closest_obstacle = self.obstacles[closest_idx]
-        return (self.position.local_x, self.position.local_y), closest_obstacle
+        return ObstacleInfo(current_pos, closest_obstacle, min_distance)
 
     def __str__(self) -> str:
         left, front, right = self.get_left_front_right_distances()
