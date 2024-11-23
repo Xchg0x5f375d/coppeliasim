@@ -423,7 +423,6 @@ class PatternMovementController:
                     threshold=threshold
                 )
             )
-            print(self.wheel_movement_controller.sensor_controller)
             if obstacles:
                 latest_obstacle = obstacles[-1]
                 dx = (

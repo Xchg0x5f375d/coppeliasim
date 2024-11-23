@@ -5,7 +5,7 @@ import numpy as np
 
 from constants import RobotConstants
 from models.obstacle_info import ObstacleInfo
-from models.point2dwithorientation import Point2DWithOrientation
+from models.point2d_with_orientation import Point2DWithOrientation
 
 
 class ObstaclePlotter:
@@ -42,14 +42,19 @@ class ObstaclePlotter:
             label=RobotConstants.YOUBOT_NAME,
             markersize=10,
         )
-        arrow_length = 0.3
+        x_min, x_max = min(x + [position.x]), max(x + [position.x])
+        y_min, y_max = min(y + [position.y]), max(y + [position.y])
+        plot_width = x_max - x_min
+        plot_height = y_max - y_min
+        plot_size = min(plot_width, plot_height)
+        arrow_length = plot_size * 0.25
         plt.arrow(
             position.x,
             position.y,
             arrow_length * np.cos(position.yaw),
             arrow_length * np.sin(position.yaw),
-            head_width=0.1,
-            head_length=0.15,
+            head_width=plot_width * 0.08,
+            head_length=plot_size * 0.12,
             fc="r",
             ec="r",
             length_includes_head=True,
