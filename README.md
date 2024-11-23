@@ -1,4 +1,6 @@
-# CoppeliaSim Introduction to Autonomous Systems Course
+# Autonomous Robotics Control & Simulation
+
+## CoppeliaSim Implementation Framework
 
 This repository contains different robotics exercises implemented in CoppeliaSim (formerly V-REP). Each exercise is
 maintained in a separate file for better organization and clarity.
