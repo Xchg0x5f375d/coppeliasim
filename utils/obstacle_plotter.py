@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Callable, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
@@ -54,7 +53,7 @@ class ObstaclePlotter:
         position: Point2DWithOrientation,
         obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
         title: str = "",
-        save_path: Optional[str] = f"{datetime.now().isoformat()}.png",
+        file_name: Optional[str] = None,
         callbacks: Optional[List[Union[Callable[[plt.Axes], None], Callable]]] = None,
     ) -> None:
         self.fig = plt.figure(figsize=(10, 10))
@@ -81,8 +80,8 @@ class ObstaclePlotter:
             for callback in callbacks:
                 callback(self.ax)
         plt.tight_layout()
-        if save_path:
-            self.fig.savefig(f"plots/{save_path}")
+        if file_name:
+            self.fig.savefig(f"plots/{file_name}")
         plt.show()
 
     def plot_ray_trace(
@@ -95,4 +94,6 @@ class ObstaclePlotter:
             [position.y, target_obstacle.closest_obstacle[1]],
             "r--",
             alpha=0.7,
+            label="Detected Obstacle",
         )
+        self.ax.legend(loc="upper right", framealpha=0.9)

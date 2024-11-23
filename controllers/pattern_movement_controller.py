@@ -410,7 +410,7 @@ class PatternMovementController:
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
             title="Exercise 5",
-            save_path="exercise5.png",
+            file_name="exercise5.png",
         )
 
     def move_with_obstacle_detection(
@@ -418,6 +418,7 @@ class PatternMovementController:
     ) -> None:
         moved_distance = 0
         step_size = 0.05
+        plotter = ObstaclePlotter()
         while moved_distance < abs(distance):
             obstacles = (
                 self.wheel_movement_controller.sensor_controller.detect_obstacles(
@@ -442,12 +443,12 @@ class PatternMovementController:
         closest_obstacle = (
             self.wheel_movement_controller.sensor_controller.find_closest_obstacle()
         )
-        ObstaclePlotter.plot_obstacles(
-            position,
+        plotter.plot_obstacles(
+            self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
-            title="Exercise 5 Obstacle Detection",
-            save_path="exercise5_obstacle_detection.png",
             callbacks=[
-                lambda _: ObstaclePlotter.plot_ray_trace(position, closest_obstacle)
+                lambda ax: ObstaclePlotter.plot_ray_trace(
+                    ax, position, closest_obstacle
+                )
             ],
         )
