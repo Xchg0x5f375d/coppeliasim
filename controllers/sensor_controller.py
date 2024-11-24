@@ -2,6 +2,7 @@ import math
 import time
 from typing import List, Optional, Tuple
 
+from models.obstacle_detection_result import ObstacleDetectionResult
 from models.obstacle_info import ObstacleInfo
 from robot.robot_position import RobotPosition
 from utils import vrep
@@ -70,23 +71,49 @@ class SensorController:
         right_distance = self.__get_distance(aux_data1, int(last_index * (30 / 120)))
         return left_distance, front_distance, right_distance
 
-    def detect_obstacles(self, threshold=5.0) -> List[Tuple[float, float]]:
+    def detect_obstacles(
+        self,
+        scanning_range: float = 5.0,
+        recording_range: float = 5.0,
+        stopping_range: float = 1.0,
+    ) -> ObstacleDetectionResult:
         self.read_sensors_streaming()
         time.sleep(0.01)
         aux_data1, _ = self.read_sensors_buffer()
+        should_stop = False
+        latest_obstacle = None
+        latest_obstacle_distance = None
         if not aux_data1 or not aux_data1[1]:
-            return []
+            return ObstacleDetectionResult(
+                obstacles=self.obstacles, should_stop=should_stop
+            )
         last_index = int(len(aux_data1[1]) / 4) - 1
         front_distance = self.__get_distance(aux_data1, last_index)
-        if front_distance < threshold:
+        if front_distance < scanning_range:
             x = self.position.local_x + front_distance * math.cos(
                 self.position.local_yaw
             )
             y = self.position.local_y + front_distance * math.sin(
                 self.position.local_yaw
             )
-            self.obstacles.append((round(x, 5), round(y, 5)))
-        return self.obstacles
+            point = (round(x, 5), round(y, 5))
+            if front_distance < recording_range:
+                self.obstacles.append(point)
+                dx = point[0] - self.position.local_x
+                dy = point[1] - self.position.local_y
+                latest_obstacle = point
+                latest_obstacle_distance = math.sqrt(dx**2 + dy**2)
+            if front_distance < stopping_range:
+                should_stop = True
+        return ObstacleDetectionResult(
+            obstacles=self.obstacles,
+            should_stop=should_stop,
+            latest_obstacle=latest_obstacle,
+            latest_obstacle_distance=latest_obstacle_distance,
+        )
+
+    def reset_obstacles(self) -> None:
+        self.obstacles.clear()
 
     def find_closest_obstacle(self) -> ObstacleInfo:
         distances = [

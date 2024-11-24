@@ -401,50 +401,61 @@ class PatternMovementController:
         print("\nAfter backward movement:")
         print(self.wheel_movement_controller.sensor_controller)
         plotter = ObstaclePlotter()
-        for step in range(steps):
+        for _ in range(steps):
             self.wheel_movement_controller.turn_right(
                 degree=angle_per_step, speed=speed
             )
             self.wheel_movement_controller.sensor_controller.detect_obstacles()
-        plotter.plot_obstacles(
+        plotter.update_plot(
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
             title="Exercise 5",
             file_name="exercise5.png",
         )
+        self.wheel_movement_controller.sensor_controller.reset_obstacles()
 
     def move_with_obstacle_detection(
-        self, distance: float, speed: float, threshold: float = 0.5
+        self, distance: float, speed: float, stopping_range: float = 0.5
     ) -> None:
+        self.wheel_movement_controller.sensor_controller.read_sensors_streaming()
+        time.sleep(0.1)
         moved_distance = 0
         step_size = 0.05
         plotter = ObstaclePlotter()
+        plotter.start_real_time_plotting()
+        for _ in range(100):
+            self.wheel_movement_controller.turn_right(degree=3.6, speed=5.0)
+            detection_result = (
+                self.wheel_movement_controller.sensor_controller.detect_obstacles()
+            )
+            plotter.update_plot(
+                self.wheel_movement_controller.position.to_point2d_with_orientation(),
+                detection_result.obstacles,
+                self.wheel_movement_controller.sensor_controller.find_closest_obstacle(),
+            )
         while moved_distance < abs(distance):
-            obstacles = (
+            detection_result = (
                 self.wheel_movement_controller.sensor_controller.detect_obstacles(
-                    threshold=threshold
+                    stopping_range=stopping_range
                 )
             )
-            if obstacles:
-                latest_obstacle = obstacles[-1]
-                dx = (
-                    latest_obstacle[0] - self.wheel_movement_controller.position.local_x
-                )
-                dy = (
-                    latest_obstacle[1] - self.wheel_movement_controller.position.local_y
-                )
-                obstacle_distance = math.sqrt(dx**2 + dy**2)
-                print(f"Obstacle detected at {obstacle_distance}m! Stopping...")
-                break
+            if detection_result.has_latest_obstacle():
+                if detection_result.should_stop:
+                    print("Within stopping range! Stopping...")
+                    self.wheel_movement_controller.sensor_controller.reset_obstacles()
+                    break
+            plotter.update_plot(
+                self.wheel_movement_controller.position.to_point2d_with_orientation(),
+                detection_result.obstacles,
+                self.wheel_movement_controller.sensor_controller.find_closest_obstacle(),
+            )
             step = min(step_size, abs(distance) - moved_distance)
             self.wheel_movement_controller.move_forward(step, speed)
             moved_distance += step
-        position = self.wheel_movement_controller.position.to_point2d_with_orientation()
-        closest_obstacle = (
-            self.wheel_movement_controller.sensor_controller.find_closest_obstacle()
-        )
-        plotter.plot_obstacles(
+        plotter.stop_real_time_plotting()
+        plotter.update_plot(
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
-            callbacks=[lambda ax: plotter.plot_ray_trace(position, closest_obstacle)],
+            self.wheel_movement_controller.sensor_controller.find_closest_obstacle(),
         )
+        self.wheel_movement_controller.sensor_controller.reset_obstacles()
