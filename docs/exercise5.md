@@ -87,7 +87,7 @@ detect and respond to obstacles in its environment while performing movement pat
 
 ### Example Plot
 
-<img src="/plots/exercise5.png" width="500" height="500" alt="Obstacle Detection Plot"/>
+<img src="/plots/exercise5/exercise5.png" width="500" height="500" alt="Obstacle Detection Plot"/>
 
 *Figure 1: Example of circular pattern analysis with obstacle detection*
 
