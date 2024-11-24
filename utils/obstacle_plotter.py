@@ -30,6 +30,17 @@ class ObstaclePlotter:
         ax.set_ylabel("Y Position (m)", labelpad=10)
         ax.legend(loc="upper right", framealpha=0.9)
 
+    @staticmethod
+    def _calculate_arrow_params(
+        position: Point2DWithOrientation,
+    ) -> Tuple[float, float, float, float]:
+        arrow_length = 0.20
+        dx = arrow_length * np.cos(position.yaw)
+        dy = arrow_length * np.sin(position.yaw)
+        head_width = arrow_length * 0.6
+        head_length = arrow_length * 0.4
+        return dx, dy, head_width, head_length
+
     def __create_static_plot(
         self,
         position: Point2DWithOrientation,
@@ -50,17 +61,14 @@ class ObstaclePlotter:
             label=RobotConstants.YOUBOT_NAME,
             markersize=10,
         )
-        plot_size = min(max(x) - min(x), max(y) - min(y)) if x else 0.5
-        arrow_length = plot_size * 0.20
-        dx = arrow_length * np.cos(position.yaw)
-        dy = arrow_length * np.sin(position.yaw)
+        dx, dy, head_width, head_length = self._calculate_arrow_params(position)
         ax.arrow(
             position.x,
             position.y,
             dx,
             dy,
-            head_width=arrow_length * 0.4,
-            head_length=arrow_length * 0.6,
+            head_width=head_width,
+            head_length=head_length,
             fc="r",
             ec="r",
             length_includes_head=True,
@@ -111,13 +119,13 @@ class ObstaclePlotter:
         self,
         position: Point2DWithOrientation,
         obstacles: Union[Tuple[float, float], List[Tuple[float, float]]],
-        closest_obstacle: Optional[ObstacleInfo] = None,
+        obstacle_info: Optional[ObstacleInfo] = None,
         title: str = "",
         file_name: Optional[str] = None,
     ) -> None:
         if not self.is_interactive:
             self.__create_static_plot(
-                position, obstacles, closest_obstacle, title, file_name
+                position, obstacles, obstacle_info, title, file_name
             )
             return
         if hasattr(self, "orientation_arrow") and self.orientation_arrow:
@@ -131,25 +139,23 @@ class ObstaclePlotter:
             plot_size = min(max(x) - min(x), max(y) - min(y))
         else:
             plot_size = 0.5
-        arrow_length = plot_size * 0.20
-        dx = arrow_length * np.cos(position.yaw)
-        dy = arrow_length * np.sin(position.yaw)
+        dx, dy, head_width, head_length = self._calculate_arrow_params(position)
         self.orientation_arrow = self.ax.arrow(
             position.x,
             position.y,
             dx,
             dy,
-            head_width=arrow_length * 0.2,
-            head_length=arrow_length * 0.4,
+            head_width=head_width,
+            head_length=head_length,
             fc="r",
             ec="r",
             length_includes_head=True,
             zorder=10,
         )
-        if closest_obstacle and closest_obstacle.closest_obstacle_position:
+        if obstacle_info and obstacle_info.closest_obstacle_position:
             self.ray_line.set_data(
-                [position.x, closest_obstacle.closest_obstacle_position[0]],
-                [position.y, closest_obstacle.closest_obstacle_position[1]],
+                [position.x, obstacle_info.closest_obstacle_position[0]],
+                [position.y, obstacle_info.closest_obstacle_position[1]],
             )
         else:
             self.ray_line.set_data([], [])

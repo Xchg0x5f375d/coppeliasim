@@ -453,9 +453,4 @@ class PatternMovementController:
             self.wheel_movement_controller.move_forward(step, speed)
             moved_distance += step
         plotter.stop_real_time_plotting()
-        plotter.update_plot(
-            self.wheel_movement_controller.position.to_point2d_with_orientation(),
-            self.wheel_movement_controller.sensor_controller.obstacles,
-            self.wheel_movement_controller.sensor_controller.find_closest_obstacle(),
-        )
         self.wheel_movement_controller.sensor_controller.reset_obstacles()
