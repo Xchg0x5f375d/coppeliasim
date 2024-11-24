@@ -401,7 +401,7 @@ class PatternMovementController:
         print("\nAfter backward movement:")
         print(self.wheel_movement_controller.sensor_controller)
         plotter = ObstaclePlotter()
-        for _ in range(steps):
+        for step in range(steps):
             self.wheel_movement_controller.turn_right(
                 degree=angle_per_step, speed=speed
             )
@@ -446,5 +446,5 @@ class PatternMovementController:
         plotter.plot_obstacles(
             self.wheel_movement_controller.position.to_point2d_with_orientation(),
             self.wheel_movement_controller.sensor_controller.obstacles,
-            callbacks=[lambda: plotter.plot_ray_trace(position, closest_obstacle)],
+            callbacks=[lambda ax: plotter.plot_ray_trace(position, closest_obstacle)],
         )
