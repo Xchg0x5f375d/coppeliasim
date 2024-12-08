@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class BaseConnection(ABC):
     @abstractmethod
     def get_object_position(
         self,
-        object_handle: int,
+        object_handle: Union[int, str],
         reference_handle: int = -1,
         operation_mode: Optional[int] = None,
     ) -> Tuple[int, np.ndarray]:
@@ -39,7 +39,7 @@ class BaseConnection(ABC):
     @abstractmethod
     def get_object_orientation(
         self,
-        object_handle: int,
+        object_handle: Union[int, str],
         reference_handle: int = -1,
         operation_mode: Optional[int] = None,
     ) -> Tuple[int, np.ndarray]:

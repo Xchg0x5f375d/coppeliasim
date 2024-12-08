@@ -394,7 +394,6 @@ class PatternMovementController:
         self, steps: int = 100, angle_per_step: float = 3.6, speed: float = 5.0
     ) -> None:
         self.wheel_movement_controller.sensor_controller.read_sensors_streaming()
-        time.sleep(0.1)
         print("\nBefore backward movement:")
         print(self.wheel_movement_controller.sensor_controller)
         self.wheel_movement_controller.move_forward(-1.0, speed)
@@ -418,7 +417,6 @@ class PatternMovementController:
         self, distance: float, speed: float, stopping_range: float = 0.5
     ) -> None:
         self.wheel_movement_controller.sensor_controller.read_sensors_streaming()
-        time.sleep(0.1)
         moved_distance = 0
         step_size = 0.05
         plotter = ObstaclePlotter()

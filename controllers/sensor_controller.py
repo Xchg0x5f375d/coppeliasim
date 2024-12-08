@@ -46,6 +46,7 @@ class SensorController:
         _, _, aux_data2 = self.vrep_connection.read_vision_sensor(
             self.hokuyo2_handle, operation_mode=vrep.simx_opmode_streaming
         )
+        time.sleep(0.1)
         return aux_data1, aux_data2
 
     def read_sensors_buffer(self) -> Tuple[List[List[float]], List[List[float]]]:
@@ -78,7 +79,6 @@ class SensorController:
         stopping_range: float = 1.0,
     ) -> ObstacleDetectionResult:
         self.read_sensors_streaming()
-        time.sleep(0.01)
         aux_data1, _ = self.read_sensors_buffer()
         should_stop = False
         latest_obstacle = None
