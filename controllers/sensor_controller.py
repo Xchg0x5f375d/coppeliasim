@@ -36,7 +36,7 @@ class SensorController:
         self.read_sensors_blocking()
 
     @staticmethod
-    def __get_distance(aux_data: List, n: int) -> float:
+    def get_distance(aux_data: List, n: int) -> float:
         return aux_data[1][4 * n + 5]
 
     def read_sensors_streaming(self) -> Tuple[List[List[float]], List[List[float]]]:
@@ -66,9 +66,9 @@ class SensorController:
         _, _, aux_data1 = self.vrep_connection.read_vision_sensor(self.hokuyo1_handle)
         _, _, aux_data2 = self.vrep_connection.read_vision_sensor(self.hokuyo2_handle)
         last_index = int(len(aux_data1[1]) / 4) - 1
-        left_distance = self.__get_distance(aux_data2, int(last_index * (90 / 120)))
-        front_distance = self.__get_distance(aux_data1, last_index)
-        right_distance = self.__get_distance(aux_data1, int(last_index * (30 / 120)))
+        left_distance = self.get_distance(aux_data2, int(last_index * (90 / 120)))
+        front_distance = self.get_distance(aux_data1, last_index)
+        right_distance = self.get_distance(aux_data1, int(last_index * (30 / 120)))
         return left_distance, front_distance, right_distance
 
     def detect_obstacles(
@@ -88,7 +88,7 @@ class SensorController:
                 obstacles=self.obstacles, should_stop=should_stop
             )
         last_index = int(len(aux_data1[1]) / 4) - 1
-        front_distance = self.__get_distance(aux_data1, last_index)
+        front_distance = self.get_distance(aux_data1, last_index)
         if front_distance < scanning_range:
             x = self.position.local_x + front_distance * math.cos(
                 self.position.local_yaw
