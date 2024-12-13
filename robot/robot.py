@@ -53,7 +53,6 @@ class Robot:
     def __validate_initialization(self) -> None:
         if self.wheel_joints is None:
             raise Exception("Failed to initialize wheel joints")
-
         if self.arm_joints is None:
             raise Exception("Failed to initialize arm joints")
 
