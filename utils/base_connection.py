@@ -3,6 +3,8 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from utils.script_function_result import ScriptFunctionResult
+
 
 class BaseConnection(ABC):
     @abstractmethod
@@ -82,4 +84,18 @@ class BaseConnection(ABC):
         sensor_handle: Optional[Tuple[int, int]],
         operation_mode: Optional[int] = None,
     ) -> Tuple[int, bool, List[List[float]]]:
+        pass
+
+    @abstractmethod
+    def call_script_function(
+        self,
+        script_description: str,
+        function_name: str,
+        options: Optional[int] = None,
+        input_ints: Optional[List[int]] = None,
+        input_floats: Optional[List[float]] = None,
+        input_strings: Optional[List[str]] = None,
+        input_buffer: List[bytearray] = bytearray(),
+        operation_mode: Optional[int] = None,
+    ) -> ScriptFunctionResult:
         pass
