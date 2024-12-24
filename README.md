@@ -52,8 +52,9 @@ coppeliasim/
 │   │   ├── exercise2.gif
 │   │   ├── exercise3.gif
 │   │   ├── exercise4.gif
+│   │   ├── exercise4.png
 │   │   ├── exercise5.gif
-│   │   └── exercise8.gif
+│   │   └── exercise8.png
 │   ├── exercise2.md
 │   ├── exercise3.md
 │   ├── exercise4.md
