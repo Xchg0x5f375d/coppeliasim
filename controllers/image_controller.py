@@ -115,5 +115,5 @@ class ImageController:
             self.keypoint_color[(kp.pt[0], kp.pt[1])] = color
         return mask, keypoints
 
-    def __del__(self):
+    def __del__(self) -> None:
         cv2.destroyAllWindows()
