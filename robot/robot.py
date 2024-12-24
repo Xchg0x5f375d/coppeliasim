@@ -4,6 +4,7 @@ import numpy as np
 
 from constants.robot_constants import RobotConstants
 from controllers.arm_movement_controller import ArmMovementController
+from controllers.image_controller import ImageController
 from robot.robot_position import RobotPosition
 from utils import VREPConnection
 from utils.base_connection import BaseConnection
@@ -77,6 +78,8 @@ class Robot:
         self.arm_movement_controller = ArmMovementController(
             self.vrep_connection, self.arm_joints
         )
+        self.image_controller = ImageController(self.vrep_connection)
 
     def __del__(self):
         del self.vrep_connection
+        del self.image_controller

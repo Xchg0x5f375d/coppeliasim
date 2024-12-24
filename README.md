@@ -11,13 +11,14 @@ maintained in a separate file for better organization and clarity.
 - `exercise3.py` - Robot trajectories and movement dynamics
 - `exercise4.py` - Odometry of the mobile robots
 - `exercise5.py` - Obstacle detection with Hokuyo sensor laser beams
+- `exercise8.py` - Color Blob Detection with Vision Sensor
 
 ## 🛠️ Prerequisites
 
 - Python 3.x
 - CoppeliaSim EDU/PRO V4.x
 - Required Python packages:
-  `numpy matplotlib`
+  `numpy matplotlib opencv-python pillow`
 
 ## 🚀 Getting Started
 
@@ -51,14 +52,17 @@ coppeliasim/
 │   │   ├── exercise2.gif
 │   │   ├── exercise3.gif
 │   │   ├── exercise4.gif
-│   │   └── exercise5.gif
+│   │   ├── exercise5.gif
+│   │   └── exercise8.gif
 │   ├── exercise2.md
 │   ├── exercise3.md
 │   ├── exercise4.md
 │   └── exercise5.md
+│   └── exercise8.md
 ├── models/
 │   ├── __init__.py
 │   ├── movement_dynamics.py
+│   ├── obstacle_detection_result.py
 │   ├── obstacle_info.py
 │   ├── path_types.py
 │   ├── point2d_with_orientation.py
@@ -71,7 +75,8 @@ coppeliasim/
 │   ├── robot.py
 │   └── robot_position.py
 ├── scenes/
-│   └── movement.ttt
+│   ├── movement.ttt
+    └── colors.ttt
 ├── utils/
 │   ├── __init__.py
 │   ├── base_connection.py
@@ -84,6 +89,7 @@ coppeliasim/
 ├── exercise3.py
 ├── exercise4.py
 ├── exercise5.py
+├── exercise8.py
 ├── README.md
 ├── requirements.txxt
 └── .gitignore

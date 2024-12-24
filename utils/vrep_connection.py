@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from models import VisionSensorData
 from utils import BaseConnection, ScriptFunctionResult, vrep
 
 
@@ -61,9 +62,7 @@ class VREPConnection(BaseConnection):
     ) -> Optional[Tuple[int, int]]:
         if self.client_id is None:
             return None
-        status, handle = vrep.simxGetObjectHandle(
-            self.client_id, name, operation_mode
-        )
+        status, handle = vrep.simxGetObjectHandle(self.client_id, name, operation_mode)
         if status != vrep.simx_return_ok:
             print(f"Failed to get handle for {name}: error code {status}")
             return None
@@ -116,9 +115,7 @@ class VREPConnection(BaseConnection):
     ) -> None:
         print(f"Attempting to set position for object: {name}")
         _, handle = self.get_object_handle(name, operation_mode)
-        vrep.simxSetObjectPosition(
-            self.client_id, handle, -1, position, operation_mode
-        )
+        vrep.simxSetObjectPosition(self.client_id, handle, -1, position, operation_mode)
 
     def set_joint_target_velocity(
         self, joint_handle, velocity, operation_mode=vrep.simx_opmode_oneshot
@@ -138,8 +135,20 @@ class VREPConnection(BaseConnection):
             self.client_id, joint_handle, angle, operation_mode
         )
 
+    def set_float_signal(
+        self,
+        signal: Tuple[str, float],
+        operation_mode: Optional[int] = vrep.simx_opmode_oneshot_wait,
+    ) -> int:
+        if self.client_id is None:
+            return -1
+        signal_name, signal_value = signal
+        return vrep.simxSetFloatSignal(
+            self.client_id, signal_name, signal_value, operation_mode
+        )
+
     def set_integer_signal(
-        self, signal: Tuple[str, int], operation_mode=vrep.simx_opmode_oneshot
+        self, signal: Tuple[str, int], operation_mode=vrep.simx_opmode_oneshot_wait
     ) -> int:
         if self.client_id is None:
             return -1
@@ -172,7 +181,7 @@ class VREPConnection(BaseConnection):
         operation_mode=vrep.simx_opmode_blocking,
     ) -> ScriptFunctionResult:
         if self.client_id is None:
-            raise ValueError("Client ID cannot be None")
+            return ScriptFunctionResult.empty()
         input_ints = input_ints if input_ints is not None else []
         input_floats = input_floats if input_floats is not None else []
         input_strings = input_strings if input_strings is not None else []
@@ -194,6 +203,26 @@ class VREPConnection(BaseConnection):
             output_strings=out_strings,
             output_bytes=out_bytes,
         )
+
+    def get_vision_sensor_image(
+        self,
+        object_handle: Union[int, str],
+        options: int = 0,
+        operation_mode: Optional[int] = vrep.simx_opmode_blocking,
+    ) -> Optional[VisionSensorData]:
+        if self.client_id is None:
+            return VisionSensorData.empty()
+        if isinstance(object_handle, str):
+            handle_result = self.get_object_handle(object_handle)
+            if handle_result is None:
+                return VisionSensorData.empty()
+            _, object_handle = handle_result
+        err, res, image = vrep.simxGetVisionSensorImage(
+            self.client_id, object_handle, options, operation_mode
+        )
+        if err != vrep.simx_return_ok:
+            return VisionSensorData.empty()
+        return VisionSensorData(error_code=err, resolution=res, image=image)
 
     def __del__(self):
         self.disconnect()
