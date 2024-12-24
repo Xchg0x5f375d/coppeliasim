@@ -44,6 +44,7 @@ coppeliasim/
 ├── controllers/
 │   ├── __init__.py
 │   ├── arm_movement_controller.py
+│   ├── image_controller.py
 │   ├── pattern_movement_controller.py
 │   ├── sensor_controller.py
 │   └── wheel_movement_controller.py
@@ -67,6 +68,7 @@ coppeliasim/
 │   ├── obstacle_info.py
 │   ├── path_types.py
 │   ├── point2d_with_orientation.py
+│   ├── vision_sensor_data.py
 │   └── wheel_velocities.py
 ├── plots/
 │   └── exercise5/
