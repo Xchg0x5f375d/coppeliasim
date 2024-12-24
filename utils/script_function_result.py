@@ -13,3 +13,13 @@ class ScriptFunctionResult:
     @property
     def success(self) -> bool:
         return self.return_code == 0
+
+    @staticmethod
+    def empty() -> "ScriptFunctionResult":
+        return ScriptFunctionResult(
+            return_code=0,
+            output_ints=[],
+            output_floats=[],
+            output_strings=[],
+            output_bytes=bytearray(),
+        )

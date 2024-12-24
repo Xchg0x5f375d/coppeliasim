@@ -3,6 +3,7 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from models import VisionSensorData
 from utils.script_function_result import ScriptFunctionResult
 
 
@@ -73,6 +74,12 @@ class BaseConnection(ABC):
         pass
 
     @abstractmethod
+    def set_float_signal(
+        self, signal: Tuple[str, float], operation_mode: Optional[int] = None
+    ) -> int:
+        pass
+
+    @abstractmethod
     def set_integer_signal(
         self, signal: Tuple[str, int], operation_mode: Optional[int] = None
     ) -> int:
@@ -98,4 +105,13 @@ class BaseConnection(ABC):
         input_buffer: List[bytearray] = bytearray(),
         operation_mode: Optional[int] = None,
     ) -> ScriptFunctionResult:
+        pass
+
+    @abstractmethod
+    def get_vision_sensor_image(
+        self,
+        object_handle: Union[int, str],
+        options: int = 0,
+        operation_mode: Optional[int] = None,
+    ) -> Optional[VisionSensorData]:
         pass
