@@ -160,6 +160,29 @@ class WheelMovementController:
         decel_duration = 0.5 * movement_time
         self.__handle_velocity_change(speed, decel_duration, False, velocity_calculator)
 
+    def move_and_adjust(
+        self,
+        angle_to_goal: float,
+        direction: float,
+        distance_to_point: float,
+        forward_velocity: float = 8,
+    ) -> None:
+        angular_velocity = (
+            (angle_to_goal / 180 * np.pi)
+            * np.sign(direction)
+            * 10
+            * (distance_to_point + 0.5) ** 2
+        )
+        velocities = self.compute_standard_wheel_velocities(
+            forward_velocity, 0, angular_velocity
+        )
+        self.set_wheel_velocities(velocities)
+        # TODO: # Update odometry in small increments
+
+    def stop(self) -> None:
+        velocities = self.compute_standard_wheel_velocities(0, 0, 0)
+        self.set_wheel_velocities(velocities)
+
     @staticmethod
     def compute_standard_wheel_velocities(
         forw_back_vel: float, left_right_vel: float, rot_vel: float

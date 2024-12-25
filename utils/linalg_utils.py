@@ -27,7 +27,6 @@ class LinAlgUtils:
     @staticmethod
     def de_eulerize(euler: Sequence[float]) -> np.ndarray:
         x = euler[1] / (np.pi / 2) * -1.0
-        y = 0.0
         if euler[0] > 0:
             y = 1.0 - abs(euler[1] / (np.pi / 2))
         else:
@@ -41,6 +40,10 @@ class LinAlgUtils:
             return np.array(v)
         return np.array(v) / norm
 
+    @staticmethod
+    def vector_length(vec: List[float]) -> float:
+        return np.sqrt(vec[0] ** 2 + vec[1] ** 2)
+
     # =====================================================================
     # Degree-related Functions
     # =====================================================================
@@ -48,11 +51,3 @@ class LinAlgUtils:
     @staticmethod
     def normalize_degrees(deg: float) -> float:
         return deg % 360
-
-    # =====================================================================
-    # Miscellaneous Functions
-    # =====================================================================
-
-    @staticmethod
-    def vector_length(vec: List[float]) -> float:
-        return np.sqrt(vec[0] ** 2 + vec[1] ** 2)

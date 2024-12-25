@@ -65,6 +65,7 @@ class Robot:
         return position
 
     def __setup_controllers(self) -> None:
+        from controllers.path_planning_controller import PathPlanningController
         from controllers.sensor_controller import SensorController
         from controllers.wheel_movement_controller import WheelMovementController
 
@@ -77,6 +78,9 @@ class Robot:
         )
         self.arm_movement_controller = ArmMovementController(
             self.vrep_connection, self.arm_joints
+        )
+        self.path_planning_controller = PathPlanningController(
+            self.vrep_connection, self.position, self.wheel_movement_controller
         )
         self.image_controller = ImageController(self.vrep_connection)
 

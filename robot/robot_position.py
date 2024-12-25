@@ -1,5 +1,5 @@
 import math
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 from numpy import ndarray
@@ -7,6 +7,7 @@ from numpy import ndarray
 from constants.robot_constants import RobotConstants
 from models.point2d_with_orientation import Point2DWithOrientation
 from utils.base_connection import BaseConnection
+from utils.linalg_utils import LinAlgUtils
 
 
 class RobotPosition:
@@ -21,6 +22,11 @@ class RobotPosition:
         self.local_x = x
         self.local_y = y
         self.local_yaw = yaw
+        self.orientation_vector = [0.0, -1.0]
+        self.start_pos: List[float] = []
+        self.start_ori: Optional[float] = None
+        self.global_degrees = 0.0
+        self.relative_pos: List[float] = [0.0, 0.0]
         self.__initialize_positions()
 
     def __initialize_positions(self) -> None:
@@ -28,6 +34,10 @@ class RobotPosition:
         self.local_x = base_pos[1][0]
         self.local_y = base_pos[1][1]
         self.local_yaw = base_orient[1][2]
+        self.start_pos = base_pos[1][:2]
+        self.relative_pos = base_pos[1][:2]
+        self.orientation_vector = LinAlgUtils.de_eulerize(base_orient[1])
+        self.start_ori = self.calculate_orientation_angle()
 
     def set_position(
         self,
@@ -61,6 +71,52 @@ class RobotPosition:
         self.local_yaw = math.atan2(math.sin(self.local_yaw), math.cos(self.local_yaw))
         self.local_x += distance * math.cos(self.local_yaw)
         self.local_y += distance * math.sin(self.local_yaw)
+        self.relative_pos[0] = self.local_x
+        self.relative_pos[1] = self.local_y
+        self.orientation_vector[0] = math.cos(self.local_yaw)
+        self.orientation_vector[1] = math.sin(self.local_yaw)
+
+    def calculate_orientation_angle(self):
+        orientation_vector = self.get_orientation_vector()
+        if orientation_vector[1] >= 0:
+            if orientation_vector[0] >= 0:
+                angle = np.arcsin(orientation_vector[0])
+            else:
+                angle = np.pi / 2 + abs(np.arcsin(orientation_vector[0]))
+        else:
+            if orientation_vector[0] >= 0:
+                angle = np.pi * 2 - abs(np.arcsin(orientation_vector[0]))
+            else:
+                angle = np.pi + abs(np.arcsin(orientation_vector[0]))
+        return angle
+
+    def get_orientation_vector(self) -> List[float]:
+        return self.orientation_vector
+
+    def set_orientation_vector(self, orientation_vector: List[float] | ndarray) -> None:
+        if isinstance(orientation_vector, ndarray):
+            orientation_vector = orientation_vector.tolist()
+        self.orientation_vector = orientation_vector
+
+    def get_start_pos(self) -> List[float]:
+        return self.start_pos
+
+    def get_start_ori(self) -> Optional[float]:
+        return self.start_ori
+
+    def get_global_degrees(self) -> float:
+        return self.global_degrees
+
+    def set_global_degrees(self, global_degrees: float) -> None:
+        self.global_degrees = global_degrees
+
+    def get_relative_pos(self) -> List[float]:
+        return self.relative_pos
+
+    def set_relative_pos(self, relative_pos: List[float] | ndarray) -> None:
+        if isinstance(relative_pos, ndarray):
+            relative_pos = relative_pos.tolist()
+        self.relative_pos = relative_pos
 
     def __str__(self) -> str:
         base_pos, base_orient = self.check_pose()

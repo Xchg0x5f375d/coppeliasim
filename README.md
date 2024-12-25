@@ -11,6 +11,7 @@ maintained in a separate file for better organization and clarity.
 - `exercise3.py` - Robot trajectories and movement dynamics
 - `exercise4.py` - Odometry of the mobile robots
 - `exercise5.py` - Obstacle detection with Hokuyo sensor laser beams
+- `exercise7.py` - Path following paths generated from the simulator
 - `exercise8.py` - Color Blob Detection with Vision Sensor
 
 ## 🛠️ Prerequisites
@@ -40,11 +41,13 @@ maintained in a separate file for better organization and clarity.
 coppeliasim/
 ├── constants/
 │   ├── __init__.py
+│   ├── path_constants.py
 │   └── robot_constants.py
 ├── controllers/
 │   ├── __init__.py
 │   ├── arm_movement_controller.py
 │   ├── image_controller.py
+│   ├── path_planning_controller.py
 │   ├── pattern_movement_controller.py
 │   ├── sensor_controller.py
 │   └── wheel_movement_controller.py
@@ -55,11 +58,13 @@ coppeliasim/
 │   │   ├── exercise4.gif
 │   │   ├── exercise4.png
 │   │   ├── exercise5.gif
+│   │   ├── exercise7.gif
 │   │   └── exercise8.png
 │   ├── exercise2.md
 │   ├── exercise3.md
 │   ├── exercise4.md
-│   └── exercise5.md
+│   ├── exercise5.md
+│   ├── exercise7.md
 │   └── exercise8.md
 ├── models/
 │   ├── __init__.py
@@ -83,8 +88,10 @@ coppeliasim/
 ├── utils/
 │   ├── __init__.py
 │   ├── base_connection.py
+│   ├── linalg_utils.py
 │   ├── obstacle_plotter.py
 │   ├── remoteApi.dll
+│   ├── script_function_result.py
 │   ├── vrep.py
 │   ├── vrep_connection.py
 │   └── vrepConst.py
@@ -92,6 +99,7 @@ coppeliasim/
 ├── exercise3.py
 ├── exercise4.py
 ├── exercise5.py
+├── exercise7.py
 ├── exercise8.py
 ├── README.md
 ├── requirements.txxt

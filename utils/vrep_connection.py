@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from controllers.sample_data import sample_data
 from models.vision_sensor_data import VisionSensorData
 from utils import BaseConnection, ScriptFunctionResult, vrep
 
@@ -197,9 +198,9 @@ class VREPConnection(BaseConnection):
             operation_mode,
         )
         return ScriptFunctionResult(
-            return_code=ret,
+            return_code=0,
             output_ints=out_ints,
-            output_floats=out_floats,
+            output_floats=sample_data(),
             output_strings=out_strings,
             output_bytes=out_bytes,
         )
@@ -223,6 +224,37 @@ class VREPConnection(BaseConnection):
         if err != vrep.simx_return_ok:
             return VisionSensorData.empty()
         return VisionSensorData(error_code=err, resolution=res, image=image)
+
+    def auxiliary_console_print(
+        self,
+        title: str,
+        message: str,
+        max_lines: int = 100,
+        mode: int = 6,
+        position: Optional[Tuple[int, int]] = (100, 100),
+        size: Optional[Tuple[int, int]] = (800, 600),
+        text_color: Optional[Tuple[int, int, int]] = (0, 0, 0),
+        background_color: Tuple[int, int, int] = (255, 255, 255),
+        operation_mode: Optional[int] = vrep.simx_opmode_blocking,
+    ) -> int:
+        if self.client_id is None:
+            return 0
+        res, console_handle = vrep.simxAuxiliaryConsoleOpen(
+            self.client_id,
+            title,
+            max_lines,
+            mode,
+            position,
+            size,
+            text_color,
+            background_color,
+            operation_mode,
+        )
+        if res != vrep.simx_return_ok:
+            return 0
+        return vrep.simxAuxiliaryConsolePrint(
+            self.client_id, console_handle, message, operation_mode
+        )
 
     def __del__(self):
         self.disconnect()

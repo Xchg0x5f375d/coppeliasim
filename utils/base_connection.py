@@ -115,3 +115,18 @@ class BaseConnection(ABC):
         operation_mode: Optional[int] = None,
     ) -> Optional[VisionSensorData]:
         pass
+
+    @abstractmethod
+    def auxiliary_console_print(
+        self,
+        title: str,
+        message: str,
+        max_lines: int = 100,
+        mode: int = 6,
+        position: Optional[Tuple[int, int]] = (100, 100),
+        size: Optional[Tuple[int, int]] = (800, 600),
+        text_color: Optional[Tuple[int, int, int]] = (0, 0, 0),
+        background_color: Tuple[int, int, int] = (255, 255, 255),
+        operation_mode: Optional[int] = None,
+    ) -> int:
+        pass
