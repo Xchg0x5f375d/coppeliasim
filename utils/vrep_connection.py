@@ -197,6 +197,11 @@ class VREPConnection(BaseConnection):
             input_buffer,
             operation_mode,
         )
+        if ret != vrep.simx_return_ok:
+            print(f"Error calling script function: {ret}. Using fallback if available")
+            return ScriptFunctionResult.from_csv(
+                f"mocks/{function_name}@{script_description}.csv"
+            )
         return ScriptFunctionResult(
             return_code=ret,
             output_ints=out_ints,

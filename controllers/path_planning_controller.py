@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 
+from constants.path_constants import PathConstants
 from controllers.wheel_movement_controller import WheelMovementController
 from robot.robot_position import RobotPosition
 from utils.linalg_utils import LinAlgUtils
@@ -174,9 +175,9 @@ class PathPlanningController:
                     key_point[1] - self.position.relative_pos[1],
                 ]
             )
-            if vector_length < 0.4:
+            if vector_length < PathConstants.MIN_DISTANCE_TO_POINT:
                 continue
-            if degree > 90:
+            if degree > PathConstants.LARGE_ANGLE_THRESHOLD:
                 self.wheel_movement_controller.stop()
                 self.__turn_towards_goal(
                     [
@@ -184,7 +185,7 @@ class PathPlanningController:
                         key_point[1] - self.position.relative_pos[1],
                     ]
                 )
-            while vector_length > 0.3:
+            while vector_length > PathConstants.MIN_DISTANCE_TO_MOVE:
                 base_pos, base_ori = self.position.check_pose()
                 self.position.set_relative_pos(base_pos[1][:2])
                 self.position.set_orientation_vector(
@@ -204,7 +205,7 @@ class PathPlanningController:
                 self.wheel_movement_controller.move_and_adjust(
                     degree, direction, vector_length
                 )
-                if degree > 45:
+                if degree > PathConstants.ANGLE_ADJUSTMENT_THRESHOLD:
                     break
         self.wheel_movement_controller.stop()
 
