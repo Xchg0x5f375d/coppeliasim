@@ -181,7 +181,8 @@ class VREPConnection(BaseConnection):
         input_buffer: List[bytearray] = bytearray(),
         operation_mode=vrep.simx_opmode_blocking,
     ) -> ScriptFunctionResult:
-        if self.client_id is None:
+        script_handle = self.get_object_handle(script_description, operation_mode)
+        if script_handle is None:
             return ScriptFunctionResult.empty()
         input_ints = input_ints if input_ints is not None else []
         input_floats = input_floats if input_floats is not None else []
@@ -198,9 +199,9 @@ class VREPConnection(BaseConnection):
             operation_mode,
         )
         return ScriptFunctionResult(
-            return_code=0,
+            return_code=ret,
             output_ints=out_ints,
-            output_floats=sample_data(),
+            output_floats=out_floats,
             output_strings=out_strings,
             output_bytes=out_bytes,
         )
