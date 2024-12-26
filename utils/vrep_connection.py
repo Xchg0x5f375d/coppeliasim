@@ -2,7 +2,6 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
-from controllers.sample_data import sample_data
 from models.vision_sensor_data import VisionSensorData
 from utils import BaseConnection, ScriptFunctionResult, vrep
 
