@@ -133,6 +133,7 @@ class PathPlanningController:
         angle = (
             orientation_vector[0] * norm_goal[0] + orientation_vector[1] * norm_goal[1]
         )
+        angle = (angle + np.pi) % (2 * np.pi) - np.pi
         if abs(angle) > 1.0:
             print(f"Invalid angle: {angle}")
             return 0, 0
@@ -145,22 +146,21 @@ class PathPlanningController:
         self.__turn_until_physical(-2 if direction < 0 else 2, degree)
         self.wheel_movement_controller.stop()
 
-    def __follow_path(self, path):
+    def __follow_path(self, path: List[float]) -> None:
         path_points = LinAlgUtils.to_matrix(path, 3)
         self.position.set_relative_pos(path[:2])
-        relative_pos = self.position.get_relative_pos()
         self.__turn_towards_goal(
             [
-                path[3] - relative_pos[0],
-                path[4] - relative_pos[1],
+                path[3] - self.position.relative_pos[0],
+                path[4] - self.position.relative_pos[1],
             ]
         )
         path = list(path_points[1::20])
         path.append(path_points[len(path_points) - 1])
         for key_point in path[1:]:
-            print("Current Orientation:", self.position.get_orientation_vector())
-            print("Relative Position:", self.position.get_relative_pos())
-            print("Target Point:", key_point)
+            print(f"Current Orientation: {self.position.get_orientation_vector()}")
+            print(f"Relative Position: {self.position.get_relative_pos()}")
+            print(f"Target Point: {key_point}")
             vector_to_point = [
                 key_point[0] - self.position.relative_pos[0],
                 key_point[1] - self.position.relative_pos[1],
