@@ -7,12 +7,28 @@ from utils import BaseConnection, ScriptFunctionResult, vrep
 
 
 class VREPConnection(BaseConnection):
-    def __init__(self, address: str = "127.0.0.1", port: int = 19997) -> None:
-        self.address = address
-        self.port = port
-        self.client_id: Optional[int] = None
-        self.connect()
-        self.start_simulation()
+    _instance = None
+
+    def __new__(cls, *args, **kwargs) -> None:
+        if not cls._instance:
+            cls._instance = super(VREPConnection, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+
+    def __init__(
+        self,
+        address: str = "127.0.0.1",
+        port: int = 19997,
+        scene_file: Optional[str] = None,
+    ) -> None:
+        if not hasattr(VREPConnection, "_instance"):
+            self.address = address
+            self.port = port
+            self.scene_file = scene_file
+            self.client_id: Optional[int] = None
+            self.connect()
+            if scene_file:
+                self.load_scene(scene_file)
+            self.start_simulation()
 
     def connect(self) -> bool:
         print("Program started")
@@ -54,6 +70,17 @@ class VREPConnection(BaseConnection):
         status = vrep.simxStopSimulation(self.client_id, vrep.simx_opmode_blocking)
         if status != vrep.simx_return_ok:
             print(f"Failed to stop simulation: error code {status}")
+            return False
+        return True
+
+    def load_scene(self, scene_file: str) -> bool:
+        if self.client_id is None:
+            return False
+        status = vrep.simxLoadScene(
+            self.client_id, scene_file, 0, vrep.simx_opmode_blocking
+        )
+        if status != vrep.simx_return_ok:
+            print(f"Failed to load scene: error code {status}")
             return False
         return True
 

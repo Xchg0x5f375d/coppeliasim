@@ -25,6 +25,10 @@ class BaseConnection(ABC):
         pass
 
     @abstractmethod
+    def load_scene(self, scene_file: str) -> bool:
+        pass
+
+    @abstractmethod
     def get_object_handle(
         self, name: str, operation_mode: Optional[int] = None
     ) -> Optional[Tuple[int, int]]:
