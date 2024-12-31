@@ -47,7 +47,7 @@ WORKDIR /opt/${USER_NAME}
 # Switch to the non-root user
 USER ${USER_NAME}
 
-# Expose the default remote API port (optional)
+# Expose the default remote API port
 EXPOSE 19997
 
 # Expose the default visualization stream port
