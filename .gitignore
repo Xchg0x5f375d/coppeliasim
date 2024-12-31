@@ -23,6 +23,9 @@ var/
 .installed.cfg
 *.egg
 
+# Ignore the download directory
+download/
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

@@ -11,7 +11,6 @@ from utils.base_connection import BaseConnection
 
 
 class Robot:
-
     def __init__(
         self,
         vrep_connection: Optional[BaseConnection] = None,
@@ -68,8 +67,7 @@ class Robot:
     def __setup_controllers(self) -> None:
         from controllers.path_planning_controller import PathPlanningController
         from controllers.sensor_controller import SensorController
-        from controllers.wheel_movement_controller import \
-            WheelMovementController
+        from controllers.wheel_movement_controller import WheelMovementController
 
         self.sensor_controller = SensorController(self.vrep_connection, self.position)
         self.wheel_movement_controller = WheelMovementController(

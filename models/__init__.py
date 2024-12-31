@@ -3,7 +3,6 @@ from .obstacle_detection_result import ObstacleDetectionResult
 from .obstacle_info import ObstacleInfo
 from .path_types import PathType
 from .point2d_with_orientation import Point2DWithOrientation
-from .script_function_result import ScriptFunctionResult
 from .vision_sensor_data import VisionSensorData
 from .wheel_velocities import WheelVelocities
 
@@ -15,5 +14,4 @@ __all__ = [
     "Point2DWithOrientation",
     "ObstacleDetectionResult",
     "VisionSensorData",
-    "ScriptFunctionResult",
 ]

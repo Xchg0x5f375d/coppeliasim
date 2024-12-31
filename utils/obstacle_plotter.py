@@ -9,7 +9,6 @@ from models.obstacle_info import ObstacleInfo
 
 
 class ObstaclePlotter:
-
     def __init__(self):
         self.fig = None
         self.ax = None

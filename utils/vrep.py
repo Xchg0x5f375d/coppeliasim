@@ -564,10 +564,9 @@ def simxGetJointPosition(clientID, jointHandle, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     position = ct.c_float()
-    return (
-        c_GetJointPosition(clientID, jointHandle, ct.byref(position), operationMode),
-        position.value,
-    )
+    return c_GetJointPosition(
+        clientID, jointHandle, ct.byref(position), operationMode
+    ), position.value
 
 
 def simxSetJointPosition(clientID, jointHandle, position, operationMode):
@@ -623,10 +622,9 @@ def simxJointGetForce(clientID, jointHandle, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     force = ct.c_float()
-    return (
-        c_GetJointForce(clientID, jointHandle, ct.byref(force), operationMode),
-        force.value,
-    )
+    return c_GetJointForce(
+        clientID, jointHandle, ct.byref(force), operationMode
+    ), force.value
 
 
 def simxGetJointForce(clientID, jointHandle, operationMode):
@@ -634,10 +632,9 @@ def simxGetJointForce(clientID, jointHandle, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     force = ct.c_float()
-    return (
-        c_GetJointForce(clientID, jointHandle, ct.byref(force), operationMode),
-        force.value,
-    )
+    return c_GetJointForce(
+        clientID, jointHandle, ct.byref(force), operationMode
+    ), force.value
 
 
 def simxSetJointForce(clientID, jointHandle, force, operationMode):
@@ -720,10 +717,9 @@ def simxGetObjectHandle(clientID, objectName, operationMode):
     handle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(objectName) is str):
         objectName = objectName.encode("utf-8")
-    return (
-        c_GetObjectHandle(clientID, objectName, ct.byref(handle), operationMode),
-        handle.value,
-    )
+    return c_GetObjectHandle(
+        clientID, objectName, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxGetVisionSensorImage(clientID, sensorHandle, options, operationMode):
@@ -787,16 +783,13 @@ def simxGetObjectChild(clientID, parentObjectHandle, childIndex, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     childObjectHandle = ct.c_int()
-    return (
-        c_GetObjectChild(
-            clientID,
-            parentObjectHandle,
-            childIndex,
-            ct.byref(childObjectHandle),
-            operationMode,
-        ),
-        childObjectHandle.value,
-    )
+    return c_GetObjectChild(
+        clientID,
+        parentObjectHandle,
+        childIndex,
+        ct.byref(childObjectHandle),
+        operationMode,
+    ), childObjectHandle.value
 
 
 def simxGetObjectParent(clientID, childObjectHandle, operationMode):
@@ -805,12 +798,9 @@ def simxGetObjectParent(clientID, childObjectHandle, operationMode):
     """
 
     parentObjectHandle = ct.c_int()
-    return (
-        c_GetObjectParent(
-            clientID, childObjectHandle, ct.byref(parentObjectHandle), operationMode
-        ),
-        parentObjectHandle.value,
-    )
+    return c_GetObjectParent(
+        clientID, childObjectHandle, ct.byref(parentObjectHandle), operationMode
+    ), parentObjectHandle.value
 
 
 def simxReadProximitySensor(clientID, sensorHandle, operationMode):
@@ -847,12 +837,9 @@ def simxLoadModel(clientID, modelPathAndName, options, operationMode):
     baseHandle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(modelPathAndName) is str):
         modelPathAndName = modelPathAndName.encode("utf-8")
-    return (
-        c_LoadModel(
-            clientID, modelPathAndName, options, ct.byref(baseHandle), operationMode
-        ),
-        baseHandle.value,
-    )
+    return c_LoadModel(
+        clientID, modelPathAndName, options, ct.byref(baseHandle), operationMode
+    ), baseHandle.value
 
 
 def simxLoadUI(clientID, uiPathAndName, options, operationMode):
@@ -925,10 +912,9 @@ def simxGetUIHandle(clientID, uiName, operationMode):
     handle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(uiName) is str):
         uiName = uiName.encode("utf-8")
-    return (
-        c_GetUIHandle(clientID, uiName, ct.byref(handle), operationMode),
-        handle.value,
-    )
+    return c_GetUIHandle(
+        clientID, uiName, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxGetUISlider(clientID, uiHandle, uiButtonID, operationMode):
@@ -937,12 +923,9 @@ def simxGetUISlider(clientID, uiHandle, uiButtonID, operationMode):
     """
 
     position = ct.c_int()
-    return (
-        c_GetUISlider(
-            clientID, uiHandle, uiButtonID, ct.byref(position), operationMode
-        ),
-        position.value,
-    )
+    return c_GetUISlider(
+        clientID, uiHandle, uiButtonID, ct.byref(position), operationMode
+    ), position.value
 
 
 def simxSetUISlider(clientID, uiHandle, uiButtonID, position, operationMode):
@@ -975,12 +958,9 @@ def simxGetUIButtonProperty(clientID, uiHandle, uiButtonID, operationMode):
     """
 
     prop = ct.c_int()
-    return (
-        c_GetUIButtonProperty(
-            clientID, uiHandle, uiButtonID, ct.byref(prop), operationMode
-        ),
-        prop.value,
-    )
+    return c_GetUIButtonProperty(
+        clientID, uiHandle, uiButtonID, ct.byref(prop), operationMode
+    ), prop.value
 
 
 def simxSetUIButtonProperty(clientID, uiHandle, uiButtonID, prop, operationMode):
@@ -1035,21 +1015,18 @@ def simxAuxiliaryConsoleOpen(
         c_backgroundColor = (ct.c_float * 3)(*backgroundColor)
     else:
         c_backgroundColor = None
-    return (
-        c_AuxiliaryConsoleOpen(
-            clientID,
-            title,
-            maxLines,
-            mode,
-            c_position,
-            c_size,
-            c_textColor,
-            c_backgroundColor,
-            ct.byref(consoleHandle),
-            operationMode,
-        ),
-        consoleHandle.value,
-    )
+    return c_AuxiliaryConsoleOpen(
+        clientID,
+        title,
+        maxLines,
+        mode,
+        c_position,
+        c_size,
+        c_textColor,
+        c_backgroundColor,
+        ct.byref(consoleHandle),
+        operationMode,
+    ), consoleHandle.value
 
 
 def simxAuxiliaryConsoleClose(clientID, consoleHandle, operationMode):
@@ -1240,12 +1217,9 @@ def simxGetIntegerParameter(clientID, paramIdentifier, operationMode):
     """
 
     paramValue = ct.c_int()
-    return (
-        c_GetIntegerParameter(
-            clientID, paramIdentifier, ct.byref(paramValue), operationMode
-        ),
-        paramValue.value,
-    )
+    return c_GetIntegerParameter(
+        clientID, paramIdentifier, ct.byref(paramValue), operationMode
+    ), paramValue.value
 
 
 def simxSetIntegerParameter(clientID, paramIdentifier, paramValue, operationMode):
@@ -1262,12 +1236,9 @@ def simxGetFloatingParameter(clientID, paramIdentifier, operationMode):
     """
 
     paramValue = ct.c_float()
-    return (
-        c_GetFloatingParameter(
-            clientID, paramIdentifier, ct.byref(paramValue), operationMode
-        ),
-        paramValue.value,
-    )
+    return c_GetFloatingParameter(
+        clientID, paramIdentifier, ct.byref(paramValue), operationMode
+    ), paramValue.value
 
 
 def simxSetFloatingParameter(clientID, paramIdentifier, paramValue, operationMode):
@@ -1311,12 +1282,9 @@ def simxGetCollisionHandle(clientID, collisionObjectName, operationMode):
     handle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(collisionObjectName) is str):
         collisionObjectName = collisionObjectName.encode("utf-8")
-    return (
-        c_GetCollisionHandle(
-            clientID, collisionObjectName, ct.byref(handle), operationMode
-        ),
-        handle.value,
-    )
+    return c_GetCollisionHandle(
+        clientID, collisionObjectName, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxGetCollectionHandle(clientID, collectionName, operationMode):
@@ -1327,12 +1295,9 @@ def simxGetCollectionHandle(clientID, collectionName, operationMode):
     handle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(collectionName) is str):
         collectionName = collectionName.encode("utf-8")
-    return (
-        c_GetCollectionHandle(
-            clientID, collectionName, ct.byref(handle), operationMode
-        ),
-        handle.value,
-    )
+    return c_GetCollectionHandle(
+        clientID, collectionName, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxGetDistanceHandle(clientID, distanceObjectName, operationMode):
@@ -1343,12 +1308,9 @@ def simxGetDistanceHandle(clientID, distanceObjectName, operationMode):
     handle = ct.c_int()
     if (sys.version_info[0] == 3) and (type(distanceObjectName) is str):
         distanceObjectName = distanceObjectName.encode("utf-8")
-    return (
-        c_GetDistanceHandle(
-            clientID, distanceObjectName, ct.byref(handle), operationMode
-        ),
-        handle.value,
-    )
+    return c_GetDistanceHandle(
+        clientID, distanceObjectName, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxReadCollision(clientID, collisionObjectHandle, operationMode):
@@ -1367,12 +1329,9 @@ def simxReadDistance(clientID, distanceObjectHandle, operationMode):
     """
 
     minimumDistance = ct.c_float()
-    return (
-        c_ReadDistance(
-            clientID, distanceObjectHandle, ct.byref(minimumDistance), operationMode
-        ),
-        minimumDistance.value,
-    )
+    return c_ReadDistance(
+        clientID, distanceObjectHandle, ct.byref(minimumDistance), operationMode
+    ), minimumDistance.value
 
 
 def simxRemoveObject(clientID, objectHandle, operationMode):
@@ -1516,10 +1475,9 @@ def simxGetDialogResult(clientID, dialogHandle, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     result = ct.c_int()
-    return (
-        c_GetDialogResult(clientID, dialogHandle, ct.byref(result), operationMode),
-        result.value,
-    )
+    return c_GetDialogResult(
+        clientID, dialogHandle, ct.byref(result), operationMode
+    ), result.value
 
 
 def simxCopyPasteObjects(clientID, objectHandles, operationMode):
@@ -1616,10 +1574,9 @@ def simxGetFloatSignal(clientID, signalName, operationMode):
     signalValue = ct.c_float()
     if (sys.version_info[0] == 3) and (type(signalName) is str):
         signalName = signalName.encode("utf-8")
-    return (
-        c_GetFloatSignal(clientID, signalName, ct.byref(signalValue), operationMode),
-        signalValue.value,
-    )
+    return c_GetFloatSignal(
+        clientID, signalName, ct.byref(signalValue), operationMode
+    ), signalValue.value
 
 
 def simxGetIntegerSignal(clientID, signalName, operationMode):
@@ -1630,10 +1587,9 @@ def simxGetIntegerSignal(clientID, signalName, operationMode):
     signalValue = ct.c_int()
     if (sys.version_info[0] == 3) and (type(signalName) is str):
         signalName = signalName.encode("utf-8")
-    return (
-        c_GetIntegerSignal(clientID, signalName, ct.byref(signalValue), operationMode),
-        signalValue.value,
-    )
+    return c_GetIntegerSignal(
+        clientID, signalName, ct.byref(signalValue), operationMode
+    ), signalValue.value
 
 
 def simxGetStringSignal(clientID, signalName, operationMode):
@@ -1821,12 +1777,9 @@ def simxGetObjectFloatParameter(clientID, objectHandle, parameterID, operationMo
     """
 
     parameterValue = ct.c_float()
-    return (
-        c_GetObjectFloatParameter(
-            clientID, objectHandle, parameterID, ct.byref(parameterValue), operationMode
-        ),
-        parameterValue.value,
-    )
+    return c_GetObjectFloatParameter(
+        clientID, objectHandle, parameterID, ct.byref(parameterValue), operationMode
+    ), parameterValue.value
 
 
 def simxSetObjectFloatParameter(
@@ -1847,12 +1800,9 @@ def simxGetObjectIntParameter(clientID, objectHandle, parameterID, operationMode
     """
 
     parameterValue = ct.c_int()
-    return (
-        c_GetObjectIntParameter(
-            clientID, objectHandle, parameterID, ct.byref(parameterValue), operationMode
-        ),
-        parameterValue.value,
-    )
+    return c_GetObjectIntParameter(
+        clientID, objectHandle, parameterID, ct.byref(parameterValue), operationMode
+    ), parameterValue.value
 
 
 def simxSetObjectIntParameter(
@@ -1872,10 +1822,9 @@ def simxGetModelProperty(clientID, objectHandle, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     """
     prop = ct.c_int()
-    return (
-        c_GetModelProperty(clientID, objectHandle, ct.byref(prop), operationMode),
-        prop.value,
-    )
+    return c_GetModelProperty(
+        clientID, objectHandle, ct.byref(prop), operationMode
+    ), prop.value
 
 
 def simxSetModelProperty(clientID, objectHandle, prop, operationMode):
@@ -2032,10 +1981,9 @@ def simxCreateDummy(clientID, size, color, operationMode):
         c_color = (ct.c_ubyte * 12)(*color)
     else:
         c_color = None
-    return (
-        c_CreateDummy(clientID, size, c_color, ct.byref(handle), operationMode),
-        handle.value,
-    )
+    return c_CreateDummy(
+        clientID, size, c_color, ct.byref(handle), operationMode
+    ), handle.value
 
 
 def simxQuery(clientID, signalName, signalValue, retSignalName, timeOutInMs):

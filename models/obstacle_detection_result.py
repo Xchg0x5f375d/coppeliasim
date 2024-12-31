@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 class ObstacleDetectionResult:
     obstacles: List[Tuple[float, float]]
     should_stop: bool
-    latest_obstacle: Optional[Tuple[float, float]] = (None,)
+    latest_obstacle: Optional[Tuple[float, float]] = None
     latest_obstacle_distance: Optional[float] = None
 
     def has_latest_obstacle(self) -> bool:

@@ -2,5 +2,3 @@ numpy
 matplotlib
 opencv-python
 pillow
-black
-isort
