@@ -24,7 +24,7 @@ RUN if ! getent group ${GROUP_ID} >/dev/null; then groupadd -g ${GROUP_ID} ${USE
     if ! getent passwd ${USER_ID} >/dev/null; then useradd -rm -d /home/${USER_NAME} -s /bin/bash -g ${GROUP_ID} -u ${USER_ID} ${USER_NAME}; fi
 
 # Set CoppeliaSim version and URL as environment variables
-ENV COPPELIASIM_VERSION="V4_7_0_rev4"
+ENV COPPELIASIM_VERSION="V4_8_0_rev0"
 ENV COPPELIASIM_URL="https://downloads.coppeliarobotics.com/${COPPELIASIM_VERSION}/CoppeliaSim_Pro_${COPPELIASIM_VERSION}_Ubuntu24_04.tar.xz"
 ENV COPPELIASIM_DIR="/opt/coppelia"
 
