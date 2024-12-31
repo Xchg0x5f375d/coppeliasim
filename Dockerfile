@@ -1,57 +1,44 @@
 # Base Image (Ubuntu 24.04, matching the CoppeliaSim version)
 FROM ubuntu:24.04
 
-# Install essential packages
-RUN apt-get update && apt-get install -y \
-    wget \
-    libxrender1 \
-    libxxf86vm1 \
-    libsm6 \
-    libxext6 \
-    xz-utils \
-    libglib2.0-0 \
-    libgl1 \
-    libglx-mesa0 && \
-    ldconfig
+# Install essential packages including xz-utils
+RUN apt-get update -q && \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y --no-install-recommends \
+        vim tar xz-utils \
+        libx11-6 libxcb1 libxau6 libgl1-mesa-dev \
+        xvfb dbus-x11 x11-utils libxkbcommon-x11-0 \
+        libavcodec-dev libavformat-dev libswscale-dev \
+        python3 python3-pip python3-venv libraw1394-11 libmpfr6 \
+        libusb-1.0-0 \
+        && \
+    apt-get autoclean -y && apt-get autoremove -y && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Define user, if needed
-ARG USER_NAME=coppelia
-ARG USER_ID=1001
-ARG GROUP_ID=1001
+# Create a virtual environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv ${VIRTUAL_ENV}
 
-# Create user and group, only if they don't exist
-RUN if ! getent group ${GROUP_ID} >/dev/null; then groupadd -g ${GROUP_ID} ${USER_NAME}; fi && \
-    if ! getent passwd ${USER_ID} >/dev/null; then useradd -rm -d /home/${USER_NAME} -s /bin/bash -g ${GROUP_ID} -u ${USER_ID} ${USER_NAME}; fi
+# Activate the virtual environment (add to PATH)
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
-# Set CoppeliaSim version and URL as environment variables
-ENV COPPELIASIM_VERSION="V4_8_0_rev0"
-ENV COPPELIASIM_URL="https://downloads.coppeliarobotics.com/${COPPELIASIM_VERSION}/CoppeliaSim_Pro_${COPPELIASIM_VERSION}_Ubuntu24_04.tar.xz"
-ENV COPPELIASIM_DIR="/opt/coppelia"
+# Install Python packages within the virtual environment
+RUN pip3 install --no-cache-dir pyzmq cbor2
 
-# Create a directory for CoppeliaSim installation
-RUN mkdir -p ${COPPELIASIM_DIR}
+COPY ./download/CoppeliaSim_Pro_V4_8_0_rev0_Ubuntu24_04.tar.xz /opt/
+RUN tar -xf /opt/CoppeliaSim_Pro_V4_8_0_rev0_Ubuntu24_04.tar.xz -C /opt && \
+    rm /opt/CoppeliaSim_Pro_V4_8_0_rev0_Ubuntu24_04.tar.xz
 
-# Download CoppeliaSim
-ADD ${COPPELIASIM_URL} ${COPPELIASIM_DIR}/coppelia.tar.xz
+ENV COPPELIASIM_ROOT_DIR=/opt/CoppeliaSim_Pro_V4_8_0_rev0_Ubuntu24_04
+ENV LD_LIBRARY_PATH=$COPPELIASIM_ROOT_DIR:$LD_LIBRARY_PATH
+ENV PATH=$COPPELIASIM_ROOT_DIR:$PATH
 
-# Extract CoppeliaSim to the installation directory
-RUN tar -xf ${COPPELIASIM_DIR}/coppelia.tar.xz -C ${COPPELIASIM_DIR} --strip-components=1 && \
-    rm ${COPPELIASIM_DIR}/coppelia.tar.xz
+RUN echo '#!/bin/bash\ncd $COPPELIASIM_ROOT_DIR\n/usr/bin/xvfb-run --server-args "-ac -screen 0, 1024x1024x24" coppeliaSim "$@"' > /entrypoint && chmod a+x /entrypoint
+# Run CoppeliaSim with the -h option:
+CMD ["/opt/coppelia/coppeliaSim.sh", "-h"]
 
-# Change ownership to the non-root user
-RUN chown -R ${USER_NAME}:${USER_NAME} ${COPPELIASIM_DIR}
+# Use following instead to open an application window via an X server:
+# RUN echo '#!/bin/bash\ncd $COPPELIASIM_ROOT_DIR\n./coppeliaSim "$@"' > /entrypoint && chmod a+x /entrypoint
 
-# Set working directory
-WORKDIR /opt/${USER_NAME}
-
-# Switch to the non-root user
-USER ${USER_NAME}
-
-# Expose the default remote API port
-EXPOSE 19997
-
-# Expose the default visualization stream port
-EXPOSE 23000
-
-# Command to start CoppeliaSim in headless mode
-CMD ["./coppeliaSim.sh", "-h"]
+EXPOSE 23000-23500
+ENTRYPOINT ["/entrypoint"]
