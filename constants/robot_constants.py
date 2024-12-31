@@ -6,25 +6,27 @@ from typing import ClassVar, Final, List
 @dataclass
 class RobotConstants:
     # Wheel Dimensions (in meters)
-    WHEEL_DIAMETER: Final[float] = 0.1
-    WHEEL_PERIMETER: Final[float] = math.pi * WHEEL_DIAMETER
+    WHEEL_DIAMETER: Final[float] = (0.1,)
+    WHEEL_PERIMETER: Final[float] = (math.pi * WHEEL_DIAMETER,)
 
     # Robot Chassis Dimensions (in meters)
     WHEEL_DISTANCE_VERTICAL: Final[float] = (
-        0.471  # Distance between front and rear wheels
+        (0.471),  # Distance between front and rear wheels
     )
     WHEEL_DISTANCE_HORIZONTAL: Final[float] = (
-        0.30046  # Distance between left and right wheels
+        (0.30046),  # Distance between left and right wheels
     )
 
     MOVEMENT_CORRECTION_FACTOR: Final[float] = 1.045
 
-    JOINT_NAMES: ClassVar[List[str]] = [
-        "fl",
-        "rl",
-        "rr",
-        "fr",
-    ]
+    JOINT_NAMES: ClassVar[List[str]] = (
+        [
+            "fl",
+            "rl",
+            "rr",
+            "fr",
+        ],
+    )
 
     YOUBOT_NAME = "youBot"
 

@@ -11,6 +11,7 @@ from utils.linalg_utils import LinAlgUtils
 
 
 class RobotPosition:
+
     def __init__(
         self,
         vrep_connection: BaseConnection,

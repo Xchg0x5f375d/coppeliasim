@@ -2,10 +2,8 @@ import math
 import time
 from typing import Any, Callable, Dict
 
-from controllers.wheel_movement_controller import (
-    MovementDynamics,
-    WheelMovementController,
-)
+from controllers.wheel_movement_controller import (MovementDynamics,
+                                                   WheelMovementController)
 from utils.obstacle_plotter import ObstaclePlotter
 
 

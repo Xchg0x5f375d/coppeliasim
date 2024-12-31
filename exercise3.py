@@ -1,7 +1,5 @@
 from controllers.pattern_movement_controller import PatternMovementController
-from controllers.wheel_movement_controller import (
-    MovementDynamics,
-)
+from controllers.wheel_movement_controller import MovementDynamics
 from robot.robot import Robot
 
 
