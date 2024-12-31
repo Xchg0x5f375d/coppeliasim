@@ -1,7 +1,7 @@
 # Base Image (Ubuntu 24.04, matching the CoppeliaSim version)
 FROM ubuntu:24.04
 
-# Install essential packages including Kerberos library
+# Install essential packages
 RUN apt-get update && apt-get install -y \
     wget \
     libxrender1 \
@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libgl1 \
     libglx-mesa0 && \
-    libkrb53 && \
     ldconfig
 
 # Define user, if needed
@@ -32,7 +31,7 @@ ENV COPPELIASIM_DIR="/opt/coppelia"
 # Create a directory for CoppeliaSim installation
 RUN mkdir -p ${COPPELIASIM_DIR}
 
-# Download CoppeliaSim (using cache-friendly technique)
+# Download CoppeliaSim
 ADD ${COPPELIASIM_URL} ${COPPELIASIM_DIR}/coppelia.tar.xz
 
 # Extract CoppeliaSim to the installation directory
@@ -54,5 +53,5 @@ EXPOSE 19997
 # Expose the default visualization stream port
 EXPOSE 23000
 
-# Command to start CoppeliaSim in headless mode (using absolute path)
+# Command to start CoppeliaSim in headless mode
 CMD ["/opt/coppelia/coppeliaSim.sh", "-h"]

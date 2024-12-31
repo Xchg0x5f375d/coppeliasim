@@ -95,13 +95,14 @@ coppeliasim/
 │   ├── vrep.py
 │   ├── vrep_connection.py
 │   └── vrepConst.py
+├── .gitignore
+├── Dockerfile
+├── README.md
 ├── exercise2.py
 ├── exercise3.py
 ├── exercise4.py
 ├── exercise5.py
 ├── exercise7.py
 ├── exercise8.py
-├── README.md
-├── requirements.txxt
-└── .gitignore
+└── requirements.txxt
 ```
