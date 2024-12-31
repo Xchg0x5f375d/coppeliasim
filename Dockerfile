@@ -42,7 +42,7 @@ RUN tar -xf ${COPPELIASIM_DIR}/coppelia.tar.xz -C ${COPPELIASIM_DIR} --strip-com
 RUN chown -R ${USER_NAME}:${USER_NAME} ${COPPELIASIM_DIR}
 
 # Set working directory
-WORKDIR /home/${USER_NAME}
+WORKDIR /opt/${USER_NAME}
 
 # Switch to the non-root user
 USER ${USER_NAME}
@@ -54,4 +54,4 @@ EXPOSE 19997
 EXPOSE 23000
 
 # Command to start CoppeliaSim in headless mode
-CMD ["/opt/coppelia/coppeliaSim.sh", "-h"]
+CMD ["./coppeliaSim.sh", "-h"]
