@@ -73,6 +73,7 @@ coppeliasim/
 │   ├── obstacle_info.py
 │   ├── path_types.py
 │   ├── point2d_with_orientation.py
+│   ├── script_function_result.py
 │   ├── vision_sensor_data.py
 │   └── wheel_velocities.py
 ├── plots/
@@ -91,7 +92,6 @@ coppeliasim/
 │   ├── linalg_utils.py
 │   ├── obstacle_plotter.py
 │   ├── remoteApi.dll
-│   ├── script_function_result.py
 │   ├── vrep.py
 │   ├── vrep_connection.py
 │   └── vrepConst.py
