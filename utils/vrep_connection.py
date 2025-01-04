@@ -2,8 +2,9 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
+from models.script_function_result import ScriptFunctionResult
 from models.vision_sensor_data import VisionSensorData
-from utils import BaseConnection, ScriptFunctionResult, vrep
+from utils import BaseConnection, vrep
 
 
 class VREPConnection(BaseConnection):
