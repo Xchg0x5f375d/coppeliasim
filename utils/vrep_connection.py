@@ -10,9 +10,9 @@ from utils import BaseConnection, vrep
 class VREPConnection(BaseConnection):
     _instance = None
 
-    def __new__(cls, *args, **kwargs) -> None:
+    def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            cls._instance = super(VREPConnection, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(VREPConnection, cls).__new__(cls)
         return cls._instance
 
     def __init__(
@@ -21,7 +21,8 @@ class VREPConnection(BaseConnection):
         port: int = 19997,
         scene_file: Optional[str] = None,
     ) -> None:
-        if not hasattr(VREPConnection, "_instance"):
+        if not hasattr(self, "_initialized"):
+            self._initialized = True
             self.address = address
             self.port = port
             self.scene_file = scene_file
