@@ -8,29 +8,21 @@ from utils import BaseConnection, vrep
 
 
 class VREPConnection(BaseConnection):
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(VREPConnection, cls).__new__(cls)
-        return cls._instance
-
     def __init__(
         self,
         address: str = "127.0.0.1",
         port: int = 19997,
         scene_file: Optional[str] = None,
     ) -> None:
-        if not hasattr(self, "_initialized"):
-            self._initialized = True
-            self.address = address
-            self.port = port
-            self.scene_file = scene_file
-            self.client_id: Optional[int] = None
-            self.connect()
-            if scene_file:
-                self.load_scene(scene_file)
-            self.start_simulation()
+        self._initialized = True
+        self.address = address
+        self.port = port
+        self.scene_file = scene_file
+        self.client_id: Optional[int] = None
+        self.connect()
+        if scene_file:
+            self.load_scene(scene_file)
+        self.start_simulation()
 
     def connect(self) -> bool:
         print("Program started")
