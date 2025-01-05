@@ -39,7 +39,7 @@ RUN python3 -m venv ${VIRTUAL_ENV}
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
 # Install required Python packages within the virtual environment
-RUN pip3 install --no-cache-dir pyzmq cbor2
+RUN pip3 install --no-cache-dir pyzmq cbor2 numpy matplotlib opencv-python pillow flask gunicorn docker
 
 # Copy the CoppeliaSim archive to /opt and extract it
 COPY ./download/CoppeliaSim_Pro_V4_8_0_rev0_Ubuntu24_04.tar.xz /opt/
